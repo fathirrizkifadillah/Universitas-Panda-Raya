@@ -1,0 +1,52 @@
+{
+  "name": "zero-trust-academic-records",
+  "version": "1.0.0",
+  "description": "Zero Trust Academic Records System implementing NIST SP 800-207",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "keys:gen": "tsx scripts/generate-keys.ts",
+    "db:migrate": "tsx packages/database/src/migrate.ts",
+    "db:seed": "tsx packages/database/src/seed.ts",
+    "db:reset": "npm run db:migrate && npm run db:seed",
+    "dev:gateway": "tsx watch packages/gateway/src/server.ts",
+    "dev:nilai": "tsx watch packages/service-nilai/src/server.ts",
+    "dev:transkrip": "tsx watch packages/service-transkrip/src/server.ts",
+    "dev:frontend": "npm run dev --prefix packages/frontend",
+    "dev": "concurrently -k -p \"[{name}]\" -n \"GATEWAY,NILAI,TRANSKRIP,FRONTEND\" -c \"cyan,magenta,yellow,blue\" \"npm run dev:gateway\" \"npm run dev:nilai\" \"npm run dev:transkrip\" \"npm run dev:frontend\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "build": "npm run build --prefix packages/frontend"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
+    "express": "^4.21.2",
+    "helmet": "^8.1.0",
+    "http-proxy-middleware": "^3.0.5",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.19.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.11.0",
+    "@types/pg": "^8.16.0",
+    "@types/supertest": "^7.2.1",
+    "concurrently": "^9.2.1",
+    "supertest": "^7.2.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}
