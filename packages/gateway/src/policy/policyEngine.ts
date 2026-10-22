@@ -18,8 +18,8 @@ export async function evaluatePolicy(req: Request): Promise<{ decision: PolicyDe
   const deviceId = (req.headers['x-device-id'] as string) || '';
   const mockTime = (req.headers['x-mock-time'] as string) || undefined;
 
-  // 1. Public endpoints
-  if (path.startsWith('/auth/') || path === '/health' || path === '/ready') {
+  // 1. Public endpoints & preflights
+  if (method === 'OPTIONS' || path.startsWith('/auth/') || path === '/health' || path === '/ready') {
     return {
       decision: { allowed: true, reasonCode: 'PUBLIC_ENDPOINT' },
       context: {

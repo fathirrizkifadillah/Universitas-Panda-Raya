@@ -21,37 +21,25 @@ import { pool } from '../../database/src/client.js';
 export function createApp(): express.Application {
   const app = express();
 
-  // Basic security hardening
-  app.use(helmet());
+  app.use((req, res, next) => {
+    console.log('[GATEWAY INCOMING]', req.method, req.url, 'ORIGIN:', req.headers.origin);
+    next();
+  });
+
+  // Basic security hardening with cross-origin allowance for deployed frontend
+  app.use(
+    helmet({
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+    })
+  );
   app.use(
     cors({
-      origin: (origin, callback) => {
-        if (!origin) return callback(null, true);
-        const allowedExact = [
-          config.frontend.url,
-          'http://localhost:5173',
-          'http://127.0.0.1:5173',
-          'http://localhost:4173',
-          'http://127.0.0.1:4173',
-        ];
-        if (
-          allowedExact.includes(origin) ||
-          origin.endsWith('.vercel.app') ||
-          origin.endsWith('.netlify.app') ||
-          origin.endsWith('.ngrok-free.app') ||
-          origin.endsWith('.ngrok.io') ||
-          origin.endsWith('.ngrok-free.dev')
-        ) {
-          return callback(null, true);
-        }
-        // In local/demo mode, allow any origin to facilitate tunneling & remote demos
-        return callback(null, true);
-      },
+      origin: true,
       credentials: true,
-      allowedHeaders: ['Content-Type', 'Authorization', 'X-Device-ID', 'X-Request-ID', 'X-Mock-Time'],
       exposedHeaders: ['X-Request-ID'],
     })
   );
+  app.options('*', cors({ origin: true, credentials: true }));
   app.use(cookieParser());
   app.use(express.json({ limit: '1mb' }));
 
@@ -81,8 +69,8 @@ export function createApp(): express.Application {
 
   // Policy Enforcement Point (PEP) Middleware for all downstream resources
   app.use(async (req, res, next) => {
-    // If request already handled by /auth or health, continue
-    if (req.path.startsWith('/auth/') || req.path === '/health' || req.path === '/ready') {
+    // If CORS preflight OPTIONS, or request already handled by /auth or health, continue
+    if (req.method === 'OPTIONS' || req.path.startsWith('/auth/') || req.path === '/health' || req.path === '/ready') {
       return next();
     }
 

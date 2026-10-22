@@ -41,6 +41,7 @@ export async function apiFetch<T>(
   const headers = new Headers(options.headers || {});
 
   headers.set('Content-Type', 'application/json');
+  headers.set('ngrok-skip-browser-warning', '69420');
 
   if (inMemoryAccessToken) {
     headers.set('Authorization', `Bearer ${inMemoryAccessToken}`);
@@ -68,6 +69,7 @@ export async function apiFetch<T>(
             headers: {
               'Content-Type': 'application/json',
               'X-Device-ID': currentDeviceId,
+              'ngrok-skip-browser-warning': '69420',
             },
           });
 
