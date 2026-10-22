@@ -7,31 +7,46 @@ export default {
   theme: {
     extend: {
       colors: {
+        // UNPANDA Brand Identity Tokens
+        brand: {
+          deep: '#344522',      // Deep Olive
+          olive: '#556B2F',     // Olive Green
+          sage: '#A3B18A',      // Sage Green
+          canvas: '#F8F9F5',    // Off-White
+          white: '#FFFFFF',     // Pure White
+          border: '#DDE3D4',    // Olive Gray
+          bamboo: '#C9A66B',    // Bamboo Tan
+          charcoal: '#20251D',  // Charcoal
+        },
         canvas: {
-          DEFAULT: '#F8F9FA',
-          subtle: '#F1F3F5',
+          DEFAULT: '#F8F9F5',
+          subtle: '#EEF2E6',
           card: '#FFFFFF',
-          border: '#E2E8F0',
+          border: '#DDE3D4',
         },
         ink: {
-          DEFAULT: '#0F172A',
-          secondary: '#334155',
-          muted: '#64748B',
-          faint: '#94A3B8',
+          DEFAULT: '#20251D',
+          secondary: '#3E4739',
+          muted: '#626E5B',
+          faint: '#8E9C87',
         },
         accent: {
-          50: '#F0FDFA',
-          100: '#CCFBF1',
-          500: '#14B8A6',
-          600: '#0D9488',
-          700: '#0F766E',
-          800: '#115E59',
+          50: '#F5F7F1',
+          100: '#E7ECE0',
+          200: '#D3DDC7',
+          300: '#BAC9AA',
+          400: '#A3B18A',
+          500: '#758853',
+          600: '#556B2F',
+          700: '#435525',
+          800: '#344522',
+          900: '#253218',
         },
         status: {
-          success: '#10B981',
-          warning: '#F59E0B',
-          danger: '#EF4444',
-          info: '#3B82F6',
+          success: '#436B2B',
+          warning: '#B8860B',
+          danger: '#B91C1C',
+          info: '#3B6E8C',
         }
       },
       fontFamily: {

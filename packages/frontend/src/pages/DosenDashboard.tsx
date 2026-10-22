@@ -137,11 +137,16 @@ export const DosenDashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-canvas-border">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-brand-border">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-ink">
-            Gradebook & Pengelolaan Nilai Dosen
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-extrabold tracking-tight text-brand-deep">
+              Gradebook & Pengelolaan Nilai Dosen
+            </h2>
+            <span className="text-[10px] font-bold bg-[#FAF5EB] text-[#8C6425] border border-[#C9A66B]/40 px-2 py-0.5 rounded-full">
+              PANDAKAD
+            </span>
+          </div>
           <p className="text-xs text-ink-muted mt-1">
             Penilaian akademik terlindungi otorisasi kepemilikan kelas dan window waktu akses (07:00 – 21:00 WIB)
           </p>
@@ -150,44 +155,44 @@ export const DosenDashboard: React.FC = () => {
         <button
           onClick={fetchClasses}
           disabled={loading}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-ink-secondary bg-white border border-slate-200 hover:bg-slate-50 rounded-lg transition-colors self-start sm:self-auto"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-brand-deep bg-white border border-brand-border hover:bg-brand-canvas rounded-xl transition-all shadow-xs self-start sm:self-auto cursor-pointer"
         >
-          <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-3.5 h-3.5 text-brand-olive ${loading ? 'animate-spin' : ''}`} />
           <span>Segarkan</span>
         </button>
       </div>
 
       {error && (
-        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 flex items-start gap-3 text-rose-800 text-xs">
+        <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 flex items-start gap-3 text-rose-900 text-xs">
           <ShieldAlert className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
-          <p>{error}</p>
+          <p className="font-medium">{error}</p>
         </div>
       )}
 
       {successMessage && (
-        <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-3 text-emerald-800 text-xs">
-          <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600 mt-0.5" />
-          <p>{successMessage}</p>
+        <div className="p-4 rounded-xl bg-[#EEF4E8] border border-[#A3B18A] flex items-start gap-3 text-[#344522] text-xs">
+          <CheckCircle className="w-4 h-4 shrink-0 text-brand-olive mt-0.5" />
+          <p className="font-semibold">{successMessage}</p>
         </div>
       )}
 
       {/* Class Selector Tabs */}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-2.5">
         {classes.map((cl) => (
           <button
             key={cl.classId}
             onClick={() => handleSelectClass(cl.classId)}
-            className={`px-4 py-2.5 rounded-xl text-xs font-medium border transition-all text-left ${
+            className={`px-4 py-3 rounded-2xl text-xs font-medium border transition-all text-left cursor-pointer ${
               selectedClassId === cl.classId
-                ? 'bg-white border-accent-600 shadow-sm text-ink ring-1 ring-accent-600'
-                : 'bg-canvas-subtle/50 border-slate-200 text-ink-muted hover:bg-white hover:text-ink'
+                ? 'bg-white border-brand-olive shadow-xs text-brand-charcoal ring-2 ring-brand-olive/30'
+                : 'bg-brand-canvas border-brand-border text-ink-muted hover:bg-white hover:text-brand-charcoal'
             }`}
           >
-            <div className="font-semibold text-ink flex items-center gap-2">
+            <div className="font-bold text-brand-charcoal flex items-center gap-2">
               <span>{cl.courseCode} — {cl.courseName}</span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-100 font-mono">Kls {cl.section}</span>
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-brand-canvas text-brand-deep border border-brand-border font-mono font-bold">Kls {cl.section}</span>
             </div>
-            <div className="text-[11px] text-ink-muted mt-0.5 flex items-center gap-1.5">
+            <div className="text-[11px] text-ink-muted mt-1 flex items-center gap-2">
               <span>{cl.students.length} Mahasiswa</span>
               <span>•</span>
               <Badge variant={cl.isFinalized ? 'success' : 'neutral'} size="sm">
@@ -199,12 +204,12 @@ export const DosenDashboard: React.FC = () => {
       </div>
 
       {/* Gradebook Card */}
-      {currentClass && (
-        <div className="bg-white border border-canvas-border rounded-xl shadow-sm overflow-hidden">
-          <div className="p-5 border-b border-canvas-border bg-slate-50/50 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      {currentClass ? (
+        <div className="bg-white border border-brand-border rounded-2xl shadow-xs overflow-hidden">
+          <div className="p-5 border-b border-brand-border bg-[#FAFBF8] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-ink">
+              <div className="flex items-center gap-2.5">
+                <h3 className="text-base font-extrabold text-brand-deep">
                   {currentClass.courseCode} — {currentClass.courseName} (Seksi {currentClass.section})
                 </h3>
                 <Badge variant={currentClass.isFinalized ? 'success' : 'warning'}>
@@ -212,20 +217,20 @@ export const DosenDashboard: React.FC = () => {
                 </Badge>
               </div>
               <p className="text-xs text-ink-muted mt-1">
-                Semester: {currentClass.term} • SKS: {currentClass.credits} SKS
+                Semester: {currentClass.term} • SKS: {currentClass.credits} SKS • Universitas Panda Raya
               </p>
             </div>
 
             <div className="flex items-center gap-3">
               {currentClass.isFinalized ? (
-                <div className="flex items-center gap-1.5 text-xs text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-lg font-medium">
-                  <Lock className="w-3.5 h-3.5 text-emerald-600" />
+                <div className="flex items-center gap-1.5 text-xs text-[#344522] bg-[#EEF4E8] border border-[#A3B18A] px-3.5 py-2 rounded-xl font-bold">
+                  <Lock className="w-3.5 h-3.5 text-brand-olive" />
                   <span>Kelas Telah Difinalisasi</span>
                 </div>
               ) : (
                 <button
                   onClick={() => setIsFinalizeModalOpen(true)}
-                  className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-accent-700 hover:bg-accent-800 rounded-lg shadow-sm transition-colors"
+                  className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-brand-deep hover:bg-brand-olive rounded-xl shadow-xs transition-all cursor-pointer"
                 >
                   <Lock className="w-3.5 h-3.5" />
                   <span>Finalisasi Nilai Kelas</span>
@@ -237,7 +242,7 @@ export const DosenDashboard: React.FC = () => {
           {/* Table */}
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-canvas-border text-ink-muted font-semibold uppercase tracking-wider text-[11px]">
+              <thead className="bg-[#FAFBF8] border-b border-brand-border text-brand-olive font-bold uppercase tracking-wider text-[11px]">
                 <tr>
                   <th className="px-6 py-3.5">NIM</th>
                   <th className="px-6 py-3.5">Nama Mahasiswa</th>
@@ -246,18 +251,18 @@ export const DosenDashboard: React.FC = () => {
                   <th className="px-6 py-3.5 text-center w-32">Aksi</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-canvas-border text-ink">
+              <tbody className="divide-y divide-brand-border text-brand-charcoal">
                 {currentClass.students.map((student) => {
                   const draftVal = scoresDraft[student.studentId] ?? String(student.score);
                   const isLocked = currentClass.isFinalized;
                   const isSaving = savingGradeId === student.gradeId;
 
                   return (
-                    <tr key={student.gradeId} className="hover:bg-slate-50/60 transition-colors">
-                      <td className="px-6 py-4 font-mono font-semibold text-ink">{student.nim}</td>
-                      <td className="px-6 py-4 font-medium text-ink">{student.fullName}</td>
+                    <tr key={student.gradeId} className="hover:bg-brand-canvas transition-colors">
+                      <td className="px-6 py-4 font-mono font-bold text-brand-deep">{student.nim}</td>
+                      <td className="px-6 py-4 font-semibold text-brand-charcoal">{student.fullName}</td>
                       <td className="px-6 py-4 text-center">
-                        <span className="inline-block px-2 py-0.5 font-bold rounded bg-slate-100 text-slate-800 text-xs">
+                        <span className="inline-block px-2.5 py-0.5 font-bold rounded-md bg-[#EEF4E8] text-[#344522] border border-[#A3B18A] text-xs">
                           {student.gradeLetter}
                         </span>
                       </td>
@@ -270,10 +275,10 @@ export const DosenDashboard: React.FC = () => {
                           disabled={isLocked || isSaving}
                           value={draftVal}
                           onChange={(e) => handleScoreChange(student.studentId, e.target.value)}
-                          className={`w-28 text-right px-2.5 py-1.5 text-xs font-mono font-semibold rounded-lg border focus:ring-1 focus:ring-accent-600 ${
+                          className={`w-28 text-right px-2.5 py-1.5 text-xs font-mono font-bold rounded-xl border focus:ring-1 focus:ring-brand-olive ${
                             isLocked
-                              ? 'bg-slate-100 border-slate-200 text-slate-500 cursor-not-allowed'
-                              : 'bg-white border-slate-300 text-ink'
+                              ? 'bg-brand-canvas border-brand-border text-ink-muted cursor-not-allowed'
+                              : 'bg-white border-brand-border text-brand-charcoal'
                           }`}
                         />
                       </td>
@@ -281,7 +286,7 @@ export const DosenDashboard: React.FC = () => {
                         <button
                           disabled={isLocked || isSaving || draftVal === String(student.score)}
                           onClick={() => handleSaveScore(student)}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-accent-700 bg-accent-50 hover:bg-accent-100 disabled:opacity-30 disabled:hover:bg-accent-50 rounded-lg transition-colors"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-white bg-brand-olive hover:bg-brand-deep disabled:opacity-30 disabled:hover:bg-brand-olive rounded-xl transition-all cursor-pointer"
                         >
                           <Save className="w-3 h-3" />
                           <span>{isSaving ? 'Menyimpan...' : 'Simpan'}</span>
@@ -293,6 +298,14 @@ export const DosenDashboard: React.FC = () => {
               </tbody>
             </table>
           </div>
+        </div>
+      ) : (
+        <div className="p-12 text-center bg-white border border-brand-border rounded-2xl">
+          <img src="/maskot_unpanda.png" alt="Maskot UNPANDA" className="w-16 h-16 object-contain mx-auto mb-3 opacity-90" />
+          <h4 className="text-sm font-bold text-brand-deep">Belum ada kelas yang diampu</h4>
+          <p className="text-xs text-ink-muted mt-1 max-w-sm mx-auto">
+            Hubungi bagian administrasi Universitas Panda Raya jika Anda belum ditugaskan mengajar kelas semester ini.
+          </p>
         </div>
       )}
 
@@ -308,14 +321,14 @@ export const DosenDashboard: React.FC = () => {
             <button
               onClick={() => setIsFinalizeModalOpen(false)}
               disabled={finalizing}
-              className="px-4 py-2 text-xs font-medium text-ink-secondary hover:bg-slate-100 rounded-lg transition-colors"
+              className="px-4 py-2 text-xs font-semibold text-brand-charcoal hover:bg-brand-canvas rounded-xl transition-colors cursor-pointer"
             >
               Batal
             </button>
             <button
               onClick={handleFinalize}
               disabled={finalizing}
-              className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-accent-700 hover:bg-accent-800 rounded-lg transition-colors shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-brand-deep hover:bg-brand-olive rounded-xl transition-all shadow-xs cursor-pointer"
             >
               <Lock className="w-3.5 h-3.5" />
               <span>{finalizing ? 'Memproses Sinkronisasi...' : 'Ya, Kunci & Finalisasi'}</span>
@@ -323,15 +336,15 @@ export const DosenDashboard: React.FC = () => {
           </>
         }
       >
-        <div className="space-y-3 text-xs text-ink-secondary">
-          <p>
+        <div className="space-y-3 text-xs text-brand-charcoal">
+          <p className="font-medium">
             Dengan menekan tombol konfirmasi di bawah:
           </p>
-          <ul className="list-disc pl-5 space-y-1.5 text-ink">
-            <li>Nilai kelas <strong className="text-ink">{currentClass?.courseName} ({currentClass?.courseCode})</strong> akan <strong>dikunci permanen</strong> dan tidak dapat diubah lagi.</li>
+          <ul className="list-disc pl-5 space-y-1.5 text-brand-charcoal">
+            <li>Nilai kelas <strong className="text-brand-deep">{currentClass?.courseName} ({currentClass?.courseCode})</strong> akan <strong>dikunci permanen</strong> dan tidak dapat diubah lagi.</li>
             <li>Service Nilai akan secara otomatis meminta <strong>Service Token (RS256)</strong> ke API Gateway.</li>
             <li>Nilai mahasiswa akan <strong>disinkronkan langsung</strong> ke Service Transkrip melalui API Gateway.</li>
-            <li>Transkrip resmi mahasiswa akan langsung terbit dengan IPK terhitung.</li>
+            <li>Transkrip resmi mahasiswa di Universitas Panda Raya akan langsung terbit dengan IPK terhitung.</li>
           </ul>
         </div>
       </Modal>

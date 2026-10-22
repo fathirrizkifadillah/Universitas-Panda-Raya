@@ -4,29 +4,29 @@
 
 @layer base {
   body {
-    @apply bg-canvas text-ink antialiased selection:bg-accent-100 selection:text-accent-800;
+    @apply bg-brand-canvas text-brand-charcoal antialiased selection:bg-brand-sage selection:text-brand-deep;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
   button:focus-visible,
   input:focus-visible,
   select:focus-visible {
-    @apply outline-none ring-2 ring-accent-600 ring-offset-2 ring-offset-canvas;
+    @apply outline-none ring-2 ring-brand-olive ring-offset-2 ring-offset-brand-canvas;
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Bamboo & Olive Theme */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #F1F3F5;
+  background: #EEF2E6;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #A3B18A;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: #556B2F;
 }

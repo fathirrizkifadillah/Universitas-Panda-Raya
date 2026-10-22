@@ -5,6 +5,8 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    include: ['tests/**/*.test.ts'],
+    exclude: ['**/node_modules/**', 'tests/e2e/**'],
     testTimeout: 20000,
     hookTimeout: 20000,
     fileParallelism: false, // run sequentially to avoid database transaction concurrency conflicts
