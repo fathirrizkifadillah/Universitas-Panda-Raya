@@ -210,8 +210,8 @@ describe('Security Negative & Abuse Resistance Suite', () => {
       expect(leakCheck.rows).toHaveLength(0);
 
       // Verify at least one ALLOW and one DENY event exist in audit_events
-      const allowEvents = await query("SELECT COUNT(*) FROM audit_events WHERE decision = 'ALLOW'");
-      const denyEvents = await query("SELECT COUNT(*) FROM audit_events WHERE decision = 'DENY'");
+      const allowEvents = await query("SELECT COUNT(*) as count FROM audit_events WHERE decision = 'ALLOW'");
+      const denyEvents = await query("SELECT COUNT(*) as count FROM audit_events WHERE decision = 'DENY'");
 
       expect(Number(allowEvents.rows[0].count)).toBeGreaterThan(0);
       expect(Number(denyEvents.rows[0].count)).toBeGreaterThan(0);

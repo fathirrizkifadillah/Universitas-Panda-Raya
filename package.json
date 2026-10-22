@@ -19,6 +19,8 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down -v",
     "build": "npm run build --prefix packages/frontend"
   },
   "dependencies": {
@@ -30,6 +32,7 @@
     "helmet": "^8.1.0",
     "http-proxy-middleware": "^3.0.5",
     "jsonwebtoken": "^9.0.3",
+    "mysql2": "^3.24.6",
     "pg": "^8.19.0",
     "zod": "^3.25.76"
   },

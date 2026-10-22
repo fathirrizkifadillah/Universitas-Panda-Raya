@@ -1,0 +1,15 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY tsconfig.json ./
+
+RUN npm ci --include=dev
+
+COPY packages ./packages
+COPY scripts ./scripts
+
+EXPOSE 3001
+
+CMD ["npx", "tsx", "packages/service-nilai/src/server.ts"]

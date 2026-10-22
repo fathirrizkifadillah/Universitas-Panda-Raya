@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import crypto from 'node:crypto';
 import { query, getClient } from '../../../database/src/client.js';
 import { gradeLetterToPoint } from '../../../shared/src/crypto.js';
 import type { ServiceTokenClaims } from '../../../shared/src/types.js';
@@ -145,20 +146,20 @@ transkripRouter.post('/transkrip/sinkron', async (req, res) => {
       const score = Number(item.score);
       const gradeLetter = item.gradeLetter;
 
-      // Idempotent UPSERT per student and class
+      // Idempotent UPSERT per student and class (MySQL syntax)
+      const entryId = crypto.randomUUID();
       await client.query(`
         INSERT INTO transcript_entries (
-          student_id, class_id, course_id, score, grade_letter, credits, synced_at, source_version
+          id, student_id, class_id, course_id, score, grade_letter, credits, synced_at, source_version
         )
-        VALUES ($1, $2, $3, $4, $5, $6, NOW(), 1)
-        ON CONFLICT (student_id, class_id)
-        DO UPDATE SET
-          score = EXCLUDED.score,
-          grade_letter = EXCLUDED.grade_letter,
-          credits = EXCLUDED.credits,
+        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), 1)
+        ON DUPLICATE KEY UPDATE
+          score = VALUES(score),
+          grade_letter = VALUES(grade_letter),
+          credits = VALUES(credits),
           synced_at = NOW(),
           source_version = transcript_entries.source_version + 1;
-      `, [studentId, classId, courseId, score, gradeLetter, credits]);
+      `, [entryId, studentId, classId, courseId, score, gradeLetter, credits]);
 
       processedCount++;
     }

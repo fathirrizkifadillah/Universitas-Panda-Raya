@@ -1,175 +1,191 @@
+import mysql from 'mysql2/promise';
 import { query, pool } from './client.js';
+import { config } from '../../shared/src/config.js';
 
 export async function runMigrations(): Promise<void> {
-  console.log('[MIGRATE] Starting database schema migrations for zero_trust_db...');
+  console.log(`[MIGRATE] Ensuring database '${config.database.database}' exists...`);
 
-  await query('CREATE EXTENSION IF NOT EXISTS "pgcrypto";');
+  // 1. Ensure database exists
+  const rootConn = await mysql.createConnection({
+    host: config.database.host,
+    port: config.database.port,
+    user: config.database.user,
+    password: config.database.password,
+  });
 
+  await rootConn.query(`CREATE DATABASE IF NOT EXISTS \`${config.database.database}\`;`);
+  await rootConn.end();
+
+  console.log(`[MIGRATE] Starting table schema migrations for ${config.database.database}...`);
+
+  // 2. Create tables
   await query(`
     -- 1. Users Table
     CREATE TABLE IF NOT EXISTS users (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      id VARCHAR(36) PRIMARY KEY,
       username VARCHAR(50) UNIQUE NOT NULL,
       email VARCHAR(100) UNIQUE NOT NULL,
       full_name VARCHAR(100) NOT NULL,
-      role VARCHAR(20) NOT NULL CHECK (role IN ('mahasiswa', 'dosen', 'admin', 'service')),
+      role VARCHAR(20) NOT NULL,
       nim_nip VARCHAR(30) UNIQUE,
       password_hash VARCHAR(255) NOT NULL,
       is_active BOOLEAN NOT NULL DEFAULT TRUE,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
-    CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
-    CREATE INDEX IF NOT EXISTS idx_users_nim_nip ON users(nim_nip);
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      INDEX idx_users_username (username),
+      INDEX idx_users_role (role),
+      INDEX idx_users_nim_nip (nim_nip)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
     -- 2. Devices Table (Zero Trust Device Context)
     CREATE TABLE IF NOT EXISTS devices (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      id VARCHAR(36) PRIMARY KEY,
+      user_id VARCHAR(36) NOT NULL,
       device_id VARCHAR(100) UNIQUE NOT NULL,
       label VARCHAR(100) NOT NULL,
       is_active BOOLEAN NOT NULL DEFAULT TRUE,
-      last_seen_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_devices_user_id ON devices(user_id);
-    CREATE INDEX IF NOT EXISTS idx_devices_device_id ON devices(device_id);
+      last_seen_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_devices_user_id (user_id),
+      INDEX idx_devices_device_id (device_id),
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
     -- 3. Courses Table
     CREATE TABLE IF NOT EXISTS courses (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      id VARCHAR(36) PRIMARY KEY,
       code VARCHAR(20) UNIQUE NOT NULL,
       name VARCHAR(100) NOT NULL,
-      credits INTEGER NOT NULL CHECK (credits > 0 AND credits <= 6),
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_courses_code ON courses(code);
+      credits INT NOT NULL,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_courses_code (code)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
     -- 4. Classes Table
     CREATE TABLE IF NOT EXISTS classes (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      course_id UUID NOT NULL REFERENCES courses(id) ON DELETE RESTRICT,
-      lecturer_id UUID NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
+      id VARCHAR(36) PRIMARY KEY,
+      course_id VARCHAR(36) NOT NULL,
+      lecturer_id VARCHAR(36) NOT NULL,
       term VARCHAR(30) NOT NULL,
       section VARCHAR(10) NOT NULL,
       is_finalized BOOLEAN NOT NULL DEFAULT FALSE,
-      finalized_by UUID REFERENCES users(id) ON DELETE SET NULL,
-      finalized_at TIMESTAMPTZ,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_classes_lecturer_id ON classes(lecturer_id);
-    CREATE INDEX IF NOT EXISTS idx_classes_course_id ON classes(course_id);
+      finalized_by VARCHAR(36) NULL,
+      finalized_at DATETIME NULL,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_classes_lecturer_id (lecturer_id),
+      INDEX idx_classes_course_id (course_id),
+      FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE RESTRICT,
+      FOREIGN KEY (lecturer_id) REFERENCES users(id) ON DELETE RESTRICT,
+      FOREIGN KEY (finalized_by) REFERENCES users(id) ON DELETE SET NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
     -- 5. Enrollments Table
     CREATE TABLE IF NOT EXISTS enrollments (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      class_id UUID NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
-      student_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      CONSTRAINT uq_enrollment UNIQUE (class_id, student_id)
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_enrollments_student_id ON enrollments(student_id);
-    CREATE INDEX IF NOT EXISTS idx_enrollments_class_id ON enrollments(class_id);
+      id VARCHAR(36) PRIMARY KEY,
+      class_id VARCHAR(36) NOT NULL,
+      student_id VARCHAR(36) NOT NULL,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      UNIQUE KEY uq_enrollment (class_id, student_id),
+      INDEX idx_enrollments_student_id (student_id),
+      INDEX idx_enrollments_class_id (class_id),
+      FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE,
+      FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
     -- 6. Grades Table
     CREATE TABLE IF NOT EXISTS grades (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      class_id UUID NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
-      student_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      score NUMERIC(5, 2) NOT NULL CHECK (score >= 0.00 AND score <= 100.00),
-      updated_by UUID NOT NULL REFERENCES users(id),
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      CONSTRAINT uq_grade_student_class UNIQUE (class_id, student_id)
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_grades_student_id ON grades(student_id);
-    CREATE INDEX IF NOT EXISTS idx_grades_class_id ON grades(class_id);
+      id VARCHAR(36) PRIMARY KEY,
+      class_id VARCHAR(36) NOT NULL,
+      student_id VARCHAR(36) NOT NULL,
+      score DECIMAL(5, 2) NOT NULL,
+      updated_by VARCHAR(36) NOT NULL,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      UNIQUE KEY uq_grade_student_class (class_id, student_id),
+      INDEX idx_grades_student_id (student_id),
+      INDEX idx_grades_class_id (class_id),
+      FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE,
+      FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY (updated_by) REFERENCES users(id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
     -- 7. Transcript Entries Table (Populated via Service Nilai -> Service Transkrip sync)
     CREATE TABLE IF NOT EXISTS transcript_entries (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      student_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-      class_id UUID NOT NULL REFERENCES classes(id) ON DELETE CASCADE,
-      course_id UUID NOT NULL REFERENCES courses(id) ON DELETE RESTRICT,
-      score NUMERIC(5, 2) NOT NULL,
+      id VARCHAR(36) PRIMARY KEY,
+      student_id VARCHAR(36) NOT NULL,
+      class_id VARCHAR(36) NOT NULL,
+      course_id VARCHAR(36) NOT NULL,
+      score DECIMAL(5, 2) NOT NULL,
       grade_letter VARCHAR(4) NOT NULL,
-      credits INTEGER NOT NULL,
-      synced_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      source_version INTEGER NOT NULL DEFAULT 1,
-      CONSTRAINT uq_transcript_student_class UNIQUE (student_id, class_id)
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_transcripts_student_id ON transcript_entries(student_id);
-    CREATE INDEX IF NOT EXISTS idx_transcripts_course_id ON transcript_entries(course_id);
+      credits INT NOT NULL,
+      synced_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      source_version INT NOT NULL DEFAULT 1,
+      UNIQUE KEY uq_transcript_student_class (student_id, class_id),
+      INDEX idx_transcripts_student_id (student_id),
+      INDEX idx_transcripts_course_id (course_id),
+      FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY (class_id) REFERENCES classes(id) ON DELETE CASCADE,
+      FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE RESTRICT
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
     -- 8. Refresh Sessions Table (Zero Trust Session Revocation & Rotation)
     CREATE TABLE IF NOT EXISTS refresh_sessions (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      id VARCHAR(36) PRIMARY KEY,
+      user_id VARCHAR(36) NOT NULL,
       token_hash VARCHAR(64) UNIQUE NOT NULL,
-      expires_at TIMESTAMPTZ NOT NULL,
-      revoked_at TIMESTAMPTZ,
-      replaced_by_id UUID,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_refresh_token_hash ON refresh_sessions(token_hash);
-    CREATE INDEX IF NOT EXISTS idx_refresh_user_id ON refresh_sessions(user_id);
+      expires_at DATETIME NOT NULL,
+      revoked_at DATETIME NULL,
+      replaced_by_id VARCHAR(36) NULL,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_refresh_token_hash (token_hash),
+      INDEX idx_refresh_user_id (user_id),
+      FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
     -- 9. Service Clients Table (Internal Service Auth)
     CREATE TABLE IF NOT EXISTS service_clients (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      id VARCHAR(36) PRIMARY KEY,
       client_id VARCHAR(50) UNIQUE NOT NULL,
       secret_hash VARCHAR(255) NOT NULL,
       allowed_scope VARCHAR(100) NOT NULL,
       is_active BOOLEAN NOT NULL DEFAULT TRUE,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_service_clients_client_id ON service_clients(client_id);
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      INDEX idx_service_clients_client_id (client_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
     -- 10. Audit Events Table (PEP Audit Trail)
     CREATE TABLE IF NOT EXISTS audit_events (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      occurred_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      id VARCHAR(36) PRIMARY KEY,
+      occurred_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
       subject_id VARCHAR(100) NOT NULL,
-      subject_type VARCHAR(20) NOT NULL CHECK (subject_type IN ('user', 'service', 'anonymous')),
+      subject_type VARCHAR(20) NOT NULL,
       method VARCHAR(10) NOT NULL,
       path VARCHAR(255) NOT NULL,
       device_id VARCHAR(100) NOT NULL,
-      decision VARCHAR(10) NOT NULL CHECK (decision IN ('ALLOW', 'DENY')),
+      decision VARCHAR(10) NOT NULL,
       reason_code VARCHAR(100) NOT NULL,
-      request_id VARCHAR(100) NOT NULL
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_audit_occurred_at ON audit_events(occurred_at DESC);
-    CREATE INDEX IF NOT EXISTS idx_audit_subject_id ON audit_events(subject_id);
-    CREATE INDEX IF NOT EXISTS idx_audit_decision ON audit_events(decision);
-    CREATE INDEX IF NOT EXISTS idx_audit_request_id ON audit_events(request_id);
+      request_id VARCHAR(100) NOT NULL,
+      INDEX idx_audit_occurred_at (occurred_at DESC),
+      INDEX idx_audit_subject_id (subject_id),
+      INDEX idx_audit_decision (decision),
+      INDEX idx_audit_request_id (request_id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
     -- 11. Outbox Events Table (Nilai Plus: Reliable Event Sync)
     CREATE TABLE IF NOT EXISTS outbox_events (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      id VARCHAR(36) PRIMARY KEY,
       event_type VARCHAR(50) NOT NULL,
-      aggregate_id UUID NOT NULL,
-      payload JSONB NOT NULL,
-      status VARCHAR(20) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'PROCESSED', 'FAILED')),
-      attempts INTEGER NOT NULL DEFAULT 0,
-      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-      processed_at TIMESTAMPTZ
-    );
-
-    CREATE INDEX IF NOT EXISTS idx_outbox_status ON outbox_events(status);
+      aggregate_id VARCHAR(36) NOT NULL,
+      payload JSON NOT NULL,
+      status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+      attempts INT NOT NULL DEFAULT 0,
+      created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      processed_at DATETIME NULL,
+      INDEX idx_outbox_status (status)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `);
 
-  console.log('[MIGRATE] Schema migrations executed successfully!');
+  console.log('[MIGRATE] Schema migrations executed successfully in MySQL!');
 }
 
 if (process.argv[1]?.includes('migrate')) {

@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import crypto from 'node:crypto';
 import { query, getClient } from '../../../database/src/client.js';
 import { config } from '../../../shared/src/config.js';
 import { calculateGradeLetter } from '../../../shared/src/crypto.js';
@@ -158,12 +159,17 @@ nilaiRouter.put('/nilai/:id', async (req, res) => {
       return;
     }
 
-    const updateRes = await client.query(`
+    await client.query(`
       UPDATE grades
       SET score = $1, updated_by = $2, updated_at = NOW()
       WHERE id = $3
-      RETURNING id, score, updated_at
     `, [numScore, userClaims.sub, gradeId]);
+
+    const updatedRowRes = await client.query<{ id: string; score: number | string; updated_at: string }>(
+      'SELECT id, score, updated_at FROM grades WHERE id = $1',
+      [gradeId]
+    );
+    const updatedRow = updatedRowRes.rows[0];
 
     await client.query('COMMIT');
 
@@ -171,10 +177,10 @@ nilaiRouter.put('/nilai/:id', async (req, res) => {
       success: true,
       message: 'Nilai berhasil disimpan',
       data: {
-        gradeId: updateRes.rows[0].id,
-        score: Number(updateRes.rows[0].score),
+        gradeId: updatedRow.id,
+        score: Number(updatedRow.score),
         gradeLetter: calculateGradeLetter(numScore),
-        updatedAt: updateRes.rows[0].updated_at,
+        updatedAt: updatedRow.updated_at,
       },
     });
   } catch (err: any) {
@@ -256,9 +262,9 @@ nilaiRouter.post('/kelas/:id/finalisasi', async (req, res) => {
 
     // 3. Record Outbox Event (Transactional Outbox Pattern)
     await client.query(`
-      INSERT INTO outbox_events (event_type, aggregate_id, payload, status)
-      VALUES ('CLASS_FINALIZED', $1, $2, 'PENDING')
-    `, [cl.id, JSON.stringify(syncPayload)]);
+      INSERT INTO outbox_events (id, event_type, aggregate_id, payload, status)
+      VALUES ($1, 'CLASS_FINALIZED', $2, $3, 'PENDING')
+    `, [crypto.randomUUID(), cl.id, JSON.stringify(syncPayload)]);
 
     await client.query('COMMIT');
 

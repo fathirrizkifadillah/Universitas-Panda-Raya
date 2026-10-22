@@ -1,0 +1,132 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: pandakad-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: zero_trust_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  db-init:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.db-init
+    container_name: pandakad-db-init
+    environment:
+      DB_CLIENT: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: zero_trust_db
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: "no"
+
+  gateway:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.gateway
+    container_name: pandakad-gateway
+    restart: always
+    environment:
+      PORT: 3000
+      GATEWAY_PORT: 3000
+      GATEWAY_URL: http://gateway:3000
+      SERVICE_NILAI_URL: http://service-nilai:3001
+      SERVICE_TRANSKRIP_URL: http://service-transkrip:3002
+      FRONTEND_URL: http://localhost:5173
+      GATEWAY_SECRET: sec_zt_gateway_prod_9f482a17cb6e310d54a28f110cbe77
+      ACCESS_TOKEN_TTL: 10m
+      REFRESH_TOKEN_TTL: 1d
+      SERVICE_TOKEN_TTL: 5m
+      JWT_ISSUER: zero-trust-gateway
+      JWT_AUDIENCE: zero-trust-system
+      DB_CLIENT: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: zero_trust_db
+      SERVICE_CLIENT_ID: grades-service-client
+      SERVICE_CLIENT_SECRET: grades_client_super_secret_key_8820
+    ports:
+      - "3000:3000"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+
+  service-nilai:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.nilai
+    container_name: pandakad-service-nilai
+    restart: always
+    environment:
+      PORT: 3001
+      SERVICE_NILAI_PORT: 3001
+      GATEWAY_URL: http://gateway:3000
+      GATEWAY_SECRET: sec_zt_gateway_prod_9f482a17cb6e310d54a28f110cbe77
+      DB_CLIENT: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: zero_trust_db
+      SERVICE_CLIENT_ID: grades-service-client
+      SERVICE_CLIENT_SECRET: grades_client_super_secret_key_8820
+    ports:
+      - "3001:3001"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+
+  service-transkrip:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.transkrip
+    container_name: pandakad-service-transkrip
+    restart: always
+    environment:
+      PORT: 3002
+      SERVICE_TRANSKRIP_PORT: 3002
+      GATEWAY_SECRET: sec_zt_gateway_prod_9f482a17cb6e310d54a28f110cbe77
+      DB_CLIENT: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root
+      DB_NAME: zero_trust_db
+    ports:
+      - "3002:3002"
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: pandakad-frontend
+    restart: always
+    environment:
+      VITE_GATEWAY_URL: http://localhost:3000
+    ports:
+      - "5173:5173"
+    depends_on:
+      - gateway
+
+volumes:
+  mysql_data:

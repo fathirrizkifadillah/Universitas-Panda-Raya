@@ -45,11 +45,12 @@ export const config = {
     timezone: process.env.ACCESS_TIMEZONE || 'Asia/Jakarta',
   },
   database: {
-    host: process.env.PGHOST || '127.0.0.1',
-    port: Number.parseInt(process.env.PGPORT || '5432', 10),
-    user: process.env.PGUSER || 'postgres',
-    password: process.env.PGPASSWORD || '##fathirdatabase$$1014',
-    database: process.env.PGDATABASE || 'zero_trust_db',
+    client: process.env.DB_CLIENT || 'mysql',
+    host: process.env.DB_HOST || process.env.PGHOST || '127.0.0.1',
+    port: Number.parseInt(process.env.DB_PORT || (process.env.DB_CLIENT === 'postgres' ? '5432' : '3306'), 10),
+    user: process.env.DB_USER || process.env.PGUSER || 'root',
+    password: process.env.DB_PASSWORD !== undefined ? process.env.DB_PASSWORD : (process.env.PGPASSWORD || ''),
+    database: process.env.DB_NAME || process.env.PGDATABASE || 'zero_trust_db',
   },
   keys: {
     privateKeyPath,

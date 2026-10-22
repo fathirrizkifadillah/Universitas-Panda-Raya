@@ -1,0 +1,17 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+COPY packages/frontend/package*.json ./packages/frontend/
+
+RUN npm install --prefix packages/frontend
+
+COPY packages/frontend ./packages/frontend
+COPY packages/shared ./packages/shared
+
+WORKDIR /app/packages/frontend
+
+EXPOSE 5173
+
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "5173"]

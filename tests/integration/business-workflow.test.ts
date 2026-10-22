@@ -29,10 +29,13 @@ describe('Integration: Zero Trust Business Workflow & Microservices Sync', () =>
     generateKeys();
     await runSeed();
 
-    // Start all 3 HTTP microservices on their designated ports
+    // Start all 3 HTTP microservices on their designated ports (ignore if already running)
     nilaiServer = startNilaiServer();
+    nilaiServer.on('error', () => {});
     transkripServer = startTranskripServer();
+    transkripServer.on('error', () => {});
     gatewayServer = startGatewayServer();
+    gatewayServer.on('error', () => {});
 
     // Fetch seed IDs
     const usersRes = await query<{ id: string; username: string; nim_nip: string; role: any }>(

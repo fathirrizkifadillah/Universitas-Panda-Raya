@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import crypto from 'node:crypto';
 import { query } from '../../../database/src/client.js';
 import {
   comparePassword,
@@ -153,10 +154,11 @@ export async function loginHandler(req: Request, res: Response): Promise<void> {
   const refreshTokenHash = hashToken(rawRefreshToken);
   const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 1 day
 
+  const sessionId = crypto.randomUUID();
   await query(`
-    INSERT INTO refresh_sessions (user_id, token_hash, expires_at)
-    VALUES ($1, $2, $3)
-  `, [user.id, refreshTokenHash, expiresAt]);
+    INSERT INTO refresh_sessions (id, user_id, token_hash, expires_at)
+    VALUES ($1, $2, $3, $4)
+  `, [sessionId, user.id, refreshTokenHash, expiresAt]);
 
   const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
   const sameSiteMode: 'none' | 'strict' = isHttps ? 'none' : 'strict';
@@ -303,14 +305,14 @@ export async function refreshHandler(req: Request, res: Response): Promise<void>
   const newHash = hashToken(newRawRefreshToken);
   const newExpiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
 
-  const newSessionResult = await query<{ id: string }>(`
-    INSERT INTO refresh_sessions (user_id, token_hash, expires_at)
-    VALUES ($1, $2, $3)
-    RETURNING id
-  `, [user.id, newHash, newExpiresAt]);
+  const newSessionId = crypto.randomUUID();
+  await query(`
+    INSERT INTO refresh_sessions (id, user_id, token_hash, expires_at)
+    VALUES ($1, $2, $3, $4)
+  `, [newSessionId, user.id, newHash, newExpiresAt]);
 
   await query('UPDATE refresh_sessions SET revoked_at = NOW(), replaced_by_id = $1 WHERE id = $2', [
-    newSessionResult.rows[0].id,
+    newSessionId,
     session.id,
   ]);
 
