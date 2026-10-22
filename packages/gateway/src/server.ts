@@ -25,7 +25,28 @@ export function createApp(): express.Application {
   app.use(helmet());
   app.use(
     cors({
-      origin: [config.frontend.url, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        const allowedExact = [
+          config.frontend.url,
+          'http://localhost:5173',
+          'http://127.0.0.1:5173',
+          'http://localhost:4173',
+          'http://127.0.0.1:4173',
+        ];
+        if (
+          allowedExact.includes(origin) ||
+          origin.endsWith('.vercel.app') ||
+          origin.endsWith('.netlify.app') ||
+          origin.endsWith('.ngrok-free.app') ||
+          origin.endsWith('.ngrok.io') ||
+          origin.endsWith('.ngrok-free.dev')
+        ) {
+          return callback(null, true);
+        }
+        // In local/demo mode, allow any origin to facilitate tunneling & remote demos
+        return callback(null, true);
+      },
       credentials: true,
       allowedHeaders: ['Content-Type', 'Authorization', 'X-Device-ID', 'X-Request-ID', 'X-Mock-Time'],
       exposedHeaders: ['X-Request-ID'],

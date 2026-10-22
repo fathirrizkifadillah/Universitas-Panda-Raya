@@ -158,11 +158,14 @@ export async function loginHandler(req: Request, res: Response): Promise<void> {
     VALUES ($1, $2, $3)
   `, [user.id, refreshTokenHash, expiresAt]);
 
+  const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
+  const sameSiteMode: 'none' | 'strict' = isHttps ? 'none' : 'strict';
+
   // Set secure HttpOnly cookie
   res.cookie('refreshToken', rawRefreshToken, {
     httpOnly: true,
-    sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
+    sameSite: sameSiteMode,
+    secure: isHttps || process.env.NODE_ENV === 'production',
     maxAge: 24 * 60 * 60 * 1000,
     path: '/',
   });
@@ -248,7 +251,14 @@ export async function refreshHandler(req: Request, res: Response): Promise<void>
       requestId,
     });
 
-    res.clearCookie('refreshToken', { path: '/' });
+    const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
+  const sameSiteMode: 'none' | 'strict' = isHttps ? 'none' : 'strict';
+
+  res.clearCookie('refreshToken', {
+    path: '/',
+    sameSite: sameSiteMode,
+    secure: isHttps || process.env.NODE_ENV === 'production',
+  });
     res.status(401).json({
       success: false,
       error: 'REFRESH_TOKEN_REUSE_DETECTED',
@@ -314,10 +324,13 @@ export async function refreshHandler(req: Request, res: Response): Promise<void>
     fullName: user.full_name,
   });
 
+  const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
+  const sameSiteMode: 'none' | 'strict' = isHttps ? 'none' : 'strict';
+
   res.cookie('refreshToken', newRawRefreshToken, {
     httpOnly: true,
-    sameSite: 'strict',
-    secure: process.env.NODE_ENV === 'production',
+    sameSite: sameSiteMode,
+    secure: isHttps || process.env.NODE_ENV === 'production',
     maxAge: 24 * 60 * 60 * 1000,
     path: '/',
   });
@@ -350,7 +363,14 @@ export async function logoutHandler(req: Request, res: Response): Promise<void> 
     await query('UPDATE refresh_sessions SET revoked_at = NOW() WHERE token_hash = $1', [tokenHash]);
   }
 
-  res.clearCookie('refreshToken', { path: '/' });
+  const isHttps = req.secure || req.headers['x-forwarded-proto'] === 'https';
+  const sameSiteMode: 'none' | 'strict' = isHttps ? 'none' : 'strict';
+
+  res.clearCookie('refreshToken', {
+    path: '/',
+    sameSite: sameSiteMode,
+    secure: isHttps || process.env.NODE_ENV === 'production',
+  });
 
   await logAuditEvent({
     subjectId: 'session',

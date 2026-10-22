@@ -1,6 +1,6 @@
 import type { User, Device } from '../types.ts';
 
-const GATEWAY_URL = 'http://localhost:3000';
+const GATEWAY_URL = import.meta.env.VITE_GATEWAY_URL || 'http://localhost:3000';
 
 let inMemoryAccessToken: string | null = null;
 let currentDeviceId: string = '';
