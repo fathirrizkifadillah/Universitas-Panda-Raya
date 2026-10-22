@@ -1,13 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext.tsx';
 import {
-  GraduationCap,
-  FileText,
-  Users,
-  Activity,
   Calendar,
-  Lock,
-  Sparkles,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -31,24 +25,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
               <>
                 <button
                   onClick={() => onSelectTab('nilai')}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium rounded-xl transition-all cursor-pointer ${
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all cursor-pointer ${
                     currentTab === 'nilai'
                       ? 'bg-brand-deep text-white font-semibold shadow-xs'
                       : 'text-brand-charcoal hover:bg-brand-canvas hover:text-brand-deep'
                   }`}
                 >
-                  <GraduationCap className={`w-4 h-4 ${currentTab === 'nilai' ? 'text-brand-bamboo' : 'text-brand-olive'}`} />
+                  <img src="/icons-unpanda/icon_nilai.png" alt="" className="w-5 h-5 object-contain shrink-0" />
                   <span>Nilai Perkuliahan</span>
                 </button>
                 <button
                   onClick={() => onSelectTab('transkrip')}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium rounded-xl transition-all cursor-pointer ${
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all cursor-pointer ${
                     currentTab === 'transkrip'
                       ? 'bg-brand-deep text-white font-semibold shadow-xs'
                       : 'text-brand-charcoal hover:bg-brand-canvas hover:text-brand-deep'
                   }`}
                 >
-                  <FileText className={`w-4 h-4 ${currentTab === 'transkrip' ? 'text-brand-bamboo' : 'text-brand-olive'}`} />
+                  <img src="/icons-unpanda/icon_transkrip.png" alt="" className="w-5 h-5 object-contain shrink-0" />
                   <span>Transkrip Akademik</span>
                 </button>
               </>
@@ -57,13 +51,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
             {user.role === 'dosen' && (
               <button
                 onClick={() => onSelectTab('kelas')}
-                className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium rounded-xl transition-all cursor-pointer ${
+                className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all cursor-pointer ${
                   currentTab === 'kelas'
                     ? 'bg-brand-deep text-white font-semibold shadow-xs'
                     : 'text-brand-charcoal hover:bg-brand-canvas hover:text-brand-deep'
                 }`}
               >
-                <Users className={`w-4 h-4 ${currentTab === 'kelas' ? 'text-brand-bamboo' : 'text-brand-olive'}`} />
+                <img src="/icons-unpanda/icon_gradebook.png" alt="" className="w-5 h-5 object-contain shrink-0" />
                 <span>Kelas & Gradebook</span>
               </button>
             )}
@@ -72,24 +66,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
               <>
                 <button
                   onClick={() => onSelectTab('transkrip')}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium rounded-xl transition-all cursor-pointer ${
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all cursor-pointer ${
                     currentTab === 'transkrip'
                       ? 'bg-brand-deep text-white font-semibold shadow-xs'
                       : 'text-brand-charcoal hover:bg-brand-canvas hover:text-brand-deep'
                   }`}
                 >
-                  <FileText className={`w-4 h-4 ${currentTab === 'transkrip' ? 'text-brand-bamboo' : 'text-brand-olive'}`} />
+                  <img src="/icons-unpanda/icon_pemeriksaan.png" alt="" className="w-5 h-5 object-contain shrink-0" />
                   <span>Transkrip Mahasiswa</span>
                 </button>
                 <button
                   onClick={() => onSelectTab('audit')}
-                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 text-sm font-medium rounded-xl transition-all cursor-pointer ${
+                  className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all cursor-pointer ${
                     currentTab === 'audit'
                       ? 'bg-brand-deep text-white font-semibold shadow-xs'
                       : 'text-brand-charcoal hover:bg-brand-canvas hover:text-brand-deep'
                   }`}
                 >
-                  <Activity className={`w-4 h-4 ${currentTab === 'audit' ? 'text-brand-bamboo' : 'text-brand-olive'}`} />
+                  <img src="/icons-unpanda/icon_audit.png" alt="" className="w-5 h-5 object-contain shrink-0" />
                   <span>Audit Trail Log PEP</span>
                 </button>
               </>
@@ -120,7 +114,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
 
       <div className="p-4 border-t border-brand-border text-[11px] text-ink-muted flex items-center justify-between">
         <div className="flex items-center gap-1.5">
-          <Lock className="w-3.5 h-3.5 text-brand-olive" />
+          <img src="/icons-unpanda/icon_keamanan.png" alt="" className="w-4 h-4 object-contain" />
           <span className="font-medium">NIST SP 800-207</span>
         </div>
         <span className="text-[10px] text-brand-olive/80 font-mono">v1.0-UNPANDA</span>

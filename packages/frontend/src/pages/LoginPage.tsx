@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext.tsx';
-import { ShieldCheck, ShieldAlert, KeyRound, Laptop, User, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, ShieldAlert, KeyRound, Laptop, User, ArrowRight, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const { login } = useAuth();
   const [username, setUsername] = useState('mahasiswa1');
   const [password, setPassword] = useState('PasswordMhs123!');
+  const [showPassword, setShowPassword] = useState(false);
   const [deviceId, setDeviceId] = useState('dev-mhs1-thinkpad-01');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -30,14 +31,14 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-brand-canvas flex flex-col justify-center py-10 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-brand-canvas flex flex-col justify-start sm:justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       {/* Brand Header */}
-      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <div className="flex justify-center mb-4">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md text-center pt-2 sm:pt-0">
+        <div className="flex justify-center mb-3">
           <img
             src="/logo_unpanda_horizontal.png"
             alt="Universitas Panda Raya - PANDAKAD"
-            className="h-16 w-auto object-contain drop-shadow-sm"
+            className="h-16 w-auto object-contain drop-shadow-sm max-w-full"
           />
         </div>
         <h1 className="text-2xl font-extrabold tracking-tight text-brand-deep">
@@ -46,14 +47,14 @@ export const LoginPage: React.FC = () => {
             NILAI — Academic Records • Universitas Panda Raya
           </span>
         </h1>
-        <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 bg-white border border-brand-border rounded-full text-[11px] text-ink-secondary">
+        <div className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 bg-white border border-brand-border rounded-full text-[11px] text-ink-secondary shadow-2xs">
           <ShieldCheck className="w-3.5 h-3.5 text-brand-olive" />
           <span>Dilindungi Arsitektur Zero Trust (NIST SP 800-207)</span>
         </div>
       </div>
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-6 shadow-sm border border-brand-border sm:rounded-2xl sm:px-10">
+        <div className="bg-white py-8 px-6 shadow-xs border border-brand-border sm:rounded-2xl sm:px-10">
           {/* Welcome Mascot Banner */}
           <div className="mb-6 p-3 rounded-xl bg-[#FAF5EB] border border-[#C9A66B]/30 flex items-center gap-3">
             <img
@@ -108,12 +109,21 @@ export const LoginPage: React.FC = () => {
                   <KeyRound className="w-4 h-4" />
                 </div>
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-9 pr-3 py-2 text-sm border border-brand-border rounded-xl focus:border-brand-olive focus:ring-1 focus:ring-brand-olive bg-white text-brand-charcoal"
+                  className="block w-full pl-9 pr-10 py-2 text-sm border border-brand-border rounded-xl focus:border-brand-olive focus:ring-1 focus:ring-brand-olive bg-white text-brand-charcoal"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  title={showPassword ? 'Sembunyikan password' : 'Lihat password'}
+                  aria-label={showPassword ? 'Sembunyikan password' : 'Lihat password'}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-ink-muted hover:text-brand-deep cursor-pointer transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
             </div>
 
@@ -161,9 +171,12 @@ export const LoginPage: React.FC = () => {
                 onClick={() => setDemoAccount('mahasiswa1', 'PasswordMhs123!', 'dev-mhs1-thinkpad-01')}
                 className="text-left px-3 py-2 text-xs rounded-xl border border-brand-border hover:border-brand-olive hover:bg-brand-canvas transition-all flex items-center justify-between cursor-pointer"
               >
-                <div>
-                  <div className="font-bold text-brand-charcoal">Mahasiswa 1 (Ahmad Fauzi)</div>
-                  <div className="text-[11px] text-ink-muted font-mono">dev-mhs1-thinkpad-01</div>
+                <div className="flex items-center gap-2.5">
+                  <img src="/icons-unpanda/icon_mahasiswa.png" alt="" className="w-4 h-4 object-contain" />
+                  <div>
+                    <div className="font-bold text-brand-charcoal">Mahasiswa 1 (Ahmad Fauzi)</div>
+                    <div className="text-[11px] text-ink-muted font-mono">dev-mhs1-thinkpad-01</div>
+                  </div>
                 </div>
                 <span className="text-[10px] bg-brand-canvas text-brand-deep border border-brand-border px-2 py-0.5 rounded-full font-semibold">Mahasiswa</span>
               </button>
@@ -173,9 +186,12 @@ export const LoginPage: React.FC = () => {
                 onClick={() => setDemoAccount('dosen1', 'PasswordDosen123!', 'dev-dosen1-laptop-01')}
                 className="text-left px-3 py-2 text-xs rounded-xl border border-brand-border hover:border-brand-olive hover:bg-brand-canvas transition-all flex items-center justify-between cursor-pointer"
               >
-                <div>
-                  <div className="font-bold text-brand-charcoal">Dosen 1 (Dr. Budi Santoso)</div>
-                  <div className="text-[11px] text-ink-muted font-mono">dev-dosen1-laptop-01 • Kelas A</div>
+                <div className="flex items-center gap-2.5">
+                  <img src="/icons-unpanda/icon_gradebook.png" alt="" className="w-4 h-4 object-contain" />
+                  <div>
+                    <div className="font-bold text-brand-charcoal">Dosen 1 (Dr. Budi Santoso)</div>
+                    <div className="text-[11px] text-ink-muted font-mono">dev-dosen1-laptop-01 • Kelas A</div>
+                  </div>
                 </div>
                 <span className="text-[10px] bg-[#EEF4E8] text-[#344522] border border-[#A3B18A] px-2 py-0.5 rounded-full font-semibold">Dosen</span>
               </button>
@@ -185,9 +201,12 @@ export const LoginPage: React.FC = () => {
                 onClick={() => setDemoAccount('dosen2', 'PasswordDosen123!', 'dev-dosen2-macbook-02')}
                 className="text-left px-3 py-2 text-xs rounded-xl border border-brand-border hover:border-brand-olive hover:bg-brand-canvas transition-all flex items-center justify-between cursor-pointer"
               >
-                <div>
-                  <div className="font-bold text-brand-charcoal">Dosen 2 (Siti Rahmawati)</div>
-                  <div className="text-[11px] text-ink-muted font-mono">dev-dosen2-macbook-02 • Kelas B</div>
+                <div className="flex items-center gap-2.5">
+                  <img src="/icons-unpanda/icon_gradebook.png" alt="" className="w-4 h-4 object-contain" />
+                  <div>
+                    <div className="font-bold text-brand-charcoal">Dosen 2 (Siti Rahmawati)</div>
+                    <div className="text-[11px] text-ink-muted font-mono">dev-dosen2-macbook-02 • Kelas B</div>
+                  </div>
                 </div>
                 <span className="text-[10px] bg-[#EEF4E8] text-[#344522] border border-[#A3B18A] px-2 py-0.5 rounded-full font-semibold">Dosen</span>
               </button>
@@ -197,9 +216,12 @@ export const LoginPage: React.FC = () => {
                 onClick={() => setDemoAccount('admin1', 'PasswordAdmin123!', 'dev-admin-chrome-01')}
                 className="text-left px-3 py-2 text-xs rounded-xl border border-brand-border hover:border-brand-olive hover:bg-brand-canvas transition-all flex items-center justify-between cursor-pointer"
               >
-                <div>
-                  <div className="font-bold text-brand-charcoal">Administrator Pusat</div>
-                  <div className="text-[11px] text-ink-muted font-mono">dev-admin-chrome-01</div>
+                <div className="flex items-center gap-2.5">
+                  <img src="/icons-unpanda/icon_audit.png" alt="" className="w-4 h-4 object-contain" />
+                  <div>
+                    <div className="font-bold text-brand-charcoal">Administrator Pusat</div>
+                    <div className="text-[11px] text-ink-muted font-mono">dev-admin-chrome-01</div>
+                  </div>
                 </div>
                 <span className="text-[10px] bg-[#FBF6EC] text-[#8C6425] border border-[#C9A66B]/50 px-2 py-0.5 rounded-full font-semibold">Admin</span>
               </button>
@@ -210,9 +232,12 @@ export const LoginPage: React.FC = () => {
                 onClick={() => setDemoAccount('mahasiswa1', 'PasswordMhs123!', 'device-asing-ilegal-999')}
                 className="text-left px-3 py-2 text-xs rounded-xl border border-rose-200 bg-rose-50/40 hover:bg-rose-50 transition-all flex items-center justify-between cursor-pointer"
               >
-                <div>
-                  <div className="font-bold text-rose-900">Uji Device Asing (Simulasi Ditolak)</div>
-                  <div className="text-[11px] text-rose-700 font-mono">device-asing-ilegal-999</div>
+                <div className="flex items-center gap-2.5">
+                  <img src="/icons-unpanda/icon_keamanan.png" alt="" className="w-4 h-4 object-contain" />
+                  <div>
+                    <div className="font-bold text-rose-900">Uji Device Asing (Simulasi Ditolak)</div>
+                    <div className="text-[11px] text-rose-700 font-mono">device-asing-ilegal-999</div>
+                  </div>
                 </div>
                 <span className="text-[10px] bg-rose-200 text-rose-900 px-2 py-0.5 rounded-full font-bold">Simulasi 403</span>
               </button>

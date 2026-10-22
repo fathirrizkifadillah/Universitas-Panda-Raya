@@ -4,12 +4,8 @@ import type { TranscriptData, AuditEventItem } from '../types.ts';
 import { Badge } from '../components/Badge.tsx';
 import {
   Search,
-  Activity,
-  FileText,
-  ShieldCheck,
   ShieldAlert,
   RefreshCw,
-  User,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -165,8 +161,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab }) =>
             <div className="space-y-4">
               <div className="p-5 bg-white border border-brand-border rounded-2xl shadow-xs flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-11 h-11 rounded-2xl bg-brand-canvas border border-brand-border flex items-center justify-center text-brand-deep font-bold">
-                    <User className="w-5 h-5 text-brand-olive" />
+                  <div className="w-11 h-11 rounded-2xl bg-[#EEF4E8] border border-[#A3B18A] flex items-center justify-center text-brand-deep font-bold shrink-0">
+                    <img src="/icons-unpanda/icon_mahasiswa.png" alt="" className="w-7 h-7 object-contain" />
                   </div>
                   <div>
                     <h3 className="text-base font-extrabold text-brand-charcoal">{transcript.student.fullName}</h3>
@@ -188,7 +184,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab }) =>
 
               <div className="bg-white border border-brand-border rounded-2xl shadow-xs overflow-hidden">
                 <div className="px-6 py-4 border-b border-brand-border bg-[#FAFBF8] flex items-center justify-between">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-brand-deep">Mata Kuliah Terdaftar di Transkrip</h4>
+                  <div className="flex items-center gap-2">
+                    <img src="/icons-unpanda/icon_pemeriksaan.png" alt="" className="w-4 h-4 object-contain" />
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-brand-deep">Mata Kuliah Terdaftar di Transkrip</h4>
+                  </div>
                   <span className="text-[11px] font-mono text-brand-olive">Universitas Panda Raya</span>
                 </div>
                 <div className="overflow-x-auto">
@@ -247,7 +246,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ currentTab }) =>
         <div className="bg-white border border-brand-border rounded-2xl shadow-xs overflow-hidden">
           <div className="px-6 py-4 border-b border-brand-border bg-[#FAFBF8] flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Activity className="w-4 h-4 text-brand-olive" />
+              <img src="/icons-unpanda/icon_audit.png" alt="" className="w-5 h-5 object-contain" />
               <h3 className="text-sm font-bold text-brand-deep">Log Aktivitas Policy Enforcement Point (PEP)</h3>
             </div>
             <span className="text-[11px] text-brand-olive font-mono font-bold">

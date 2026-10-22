@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext.tsx';
 import { apiFetch } from '../api/client.ts';
 import type { GradeItem, TranscriptData } from '../types.ts';
 import { Badge } from '../components/Badge.tsx';
-import { GraduationCap, Award, BookOpen, AlertCircle, RefreshCw, Sparkles } from 'lucide-react';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 
 interface MahasiswaDashboardProps {
   currentTab: string;
@@ -89,7 +89,7 @@ export const MahasiswaDashboard: React.FC<MahasiswaDashboardProps> = ({ currentT
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="p-5 bg-white border border-brand-border rounded-2xl shadow-xs">
               <div className="flex items-center gap-2 text-xs font-bold text-brand-olive uppercase tracking-wider">
-                <BookOpen className="w-4 h-4 text-brand-olive" />
+                <img src="/icons-unpanda/icon_gradebook.png" alt="" className="w-5 h-5 object-contain" />
                 <span>Mata Kuliah Diambil</span>
               </div>
               <div className="mt-2 text-3xl font-extrabold text-brand-deep">{grades.length}</div>
@@ -98,7 +98,7 @@ export const MahasiswaDashboard: React.FC<MahasiswaDashboardProps> = ({ currentT
 
             <div className="p-5 bg-white border border-brand-border rounded-2xl shadow-xs">
               <div className="flex items-center gap-2 text-xs font-bold text-brand-olive uppercase tracking-wider">
-                <GraduationCap className="w-4 h-4 text-brand-deep" />
+                <img src="/icons-unpanda/icon_nilai.png" alt="" className="w-5 h-5 object-contain" />
                 <span>Total SKS Semester</span>
               </div>
               <div className="mt-2 text-3xl font-extrabold text-brand-deep">
@@ -109,7 +109,7 @@ export const MahasiswaDashboard: React.FC<MahasiswaDashboardProps> = ({ currentT
 
             <div className="p-5 bg-white border border-brand-border rounded-2xl shadow-xs">
               <div className="flex items-center gap-2 text-xs font-bold text-[#8C6425] uppercase tracking-wider">
-                <Award className="w-4 h-4 text-brand-bamboo" />
+                <img src="/icons-unpanda/icon_transkrip.png" alt="" className="w-5 h-5 object-contain" />
                 <span>Rata-Rata Nilai</span>
               </div>
               <div className="mt-2 text-3xl font-extrabold text-brand-deep">
@@ -124,7 +124,10 @@ export const MahasiswaDashboard: React.FC<MahasiswaDashboardProps> = ({ currentT
           {/* Table */}
           <div className="bg-white border border-brand-border rounded-2xl shadow-xs overflow-hidden">
             <div className="px-6 py-4 border-b border-brand-border bg-[#FAFBF8] flex items-center justify-between">
-              <h3 className="text-sm font-bold text-brand-deep">Daftar Nilai Semester</h3>
+              <div className="flex items-center gap-2">
+                <img src="/icons-unpanda/icon_nilai.png" alt="" className="w-4 h-4 object-contain" />
+                <h3 className="text-sm font-bold text-brand-deep">Daftar Nilai Semester</h3>
+              </div>
               <span className="text-[11px] font-mono text-brand-olive">Sumber: Service Nilai (Port 3001)</span>
             </div>
             <div className="overflow-x-auto">
@@ -185,7 +188,10 @@ export const MahasiswaDashboard: React.FC<MahasiswaDashboardProps> = ({ currentT
         <>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="p-5 bg-white border border-brand-border rounded-2xl shadow-xs">
-              <div className="text-xs font-bold text-brand-olive uppercase tracking-wider">Indeks Prestasi Kumulatif (IPK)</div>
+              <div className="flex items-center gap-2 text-xs font-bold text-brand-olive uppercase tracking-wider">
+                <img src="/icons-unpanda/icon_transkrip.png" alt="" className="w-5 h-5 object-contain" />
+                <span>Indeks Prestasi Kumulatif (IPK)</span>
+              </div>
               <div className="mt-2 text-4xl font-extrabold text-brand-deep">
                 {transcript?.summary.gpa.toFixed(2) || '0.00'}
               </div>
@@ -193,7 +199,10 @@ export const MahasiswaDashboard: React.FC<MahasiswaDashboardProps> = ({ currentT
             </div>
 
             <div className="p-5 bg-white border border-brand-border rounded-2xl shadow-xs">
-              <div className="text-xs font-bold text-brand-olive uppercase tracking-wider">Total SKS Lulus</div>
+              <div className="flex items-center gap-2 text-xs font-bold text-brand-olive uppercase tracking-wider">
+                <img src="/icons-unpanda/icon_nilai.png" alt="" className="w-5 h-5 object-contain" />
+                <span>Total SKS Lulus</span>
+              </div>
               <div className="mt-2 text-4xl font-extrabold text-brand-deep">
                 {transcript?.summary.totalCredits || 0}
               </div>
@@ -203,7 +212,10 @@ export const MahasiswaDashboard: React.FC<MahasiswaDashboardProps> = ({ currentT
 
           <div className="bg-white border border-brand-border rounded-2xl shadow-xs overflow-hidden">
             <div className="px-6 py-4 border-b border-brand-border bg-[#FAFBF8] flex items-center justify-between">
-              <h3 className="text-sm font-bold text-brand-deep">Riwayat Mata Kuliah Transkrip Resmi</h3>
+              <div className="flex items-center gap-2">
+                <img src="/icons-unpanda/icon_transkrip.png" alt="" className="w-4 h-4 object-contain" />
+                <h3 className="text-sm font-bold text-brand-deep">Riwayat Mata Kuliah Transkrip Resmi</h3>
+              </div>
               <span className="text-[11px] font-mono text-brand-olive">
                 Sumber Data: Service Transkrip (Port 3002) via API Gateway
               </span>

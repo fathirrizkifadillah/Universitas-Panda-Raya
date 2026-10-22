@@ -189,6 +189,7 @@ export const DosenDashboard: React.FC = () => {
             }`}
           >
             <div className="font-bold text-brand-charcoal flex items-center gap-2">
+              <img src="/icons-unpanda/icon_gradebook.png" alt="" className="w-3.5 h-3.5 object-contain" />
               <span>{cl.courseCode} — {cl.courseName}</span>
               <span className="text-[10px] px-2 py-0.5 rounded-full bg-brand-canvas text-brand-deep border border-brand-border font-mono font-bold">Kls {cl.section}</span>
             </div>
@@ -209,6 +210,7 @@ export const DosenDashboard: React.FC = () => {
           <div className="p-5 border-b border-brand-border bg-[#FAFBF8] flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
               <div className="flex items-center gap-2.5">
+                <img src="/icons-unpanda/icon_gradebook.png" alt="" className="w-6 h-6 object-contain shrink-0" />
                 <h3 className="text-base font-extrabold text-brand-deep">
                   {currentClass.courseCode} — {currentClass.courseName} (Seksi {currentClass.section})
                 </h3>
