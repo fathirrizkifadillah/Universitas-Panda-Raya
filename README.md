@@ -14,7 +14,7 @@ Sistem Nilai Akademik berbasis **Zero Trust Security** yang menerapkan arsitektu
 | **Service Nilai** | `3001` | Node.js + Express + TypeScript | **Resource Service**: Gradebook, validasi kepemilikan kelas, inisiasi finalisasi nilai |
 | **Service Transkrip** | `3002` | Node.js + Express + TypeScript | **Resource Service**: Transkrip resmi, sinkronisasi idempoten via Service Token |
 | **Frontend ("NILAI")** | `5173` | React 18 + Vite + TypeScript + Tailwind CSS | **Client UI**: Dashboard akademik multi-role, memory token storage, zero secrets in client |
-| **PostgreSQL Lokal** | `5432` | PostgreSQL 17 | **Resource**: Basis data bersama `zero_trust_db` (users, devices, grades, transcripts, audit) |
+| **MySQL / MariaDB** | `3306` | MySQL 8.x / MariaDB (Laragon/XAMPP) | **Resource**: Basis data bersama `zero_trust_db` (users, devices, grades, transcripts, audit) |
 
 ---
 
@@ -22,7 +22,7 @@ Sistem Nilai Akademik berbasis **Zero Trust Security** yang menerapkan arsitektu
 
 - **Node.js**: Versi `v20.x` atau lebih baru (`v24.x` direkomendasikan).
 - **npm**: Versi `10.x` atau lebih baru.
-- **PostgreSQL**: PostgreSQL 17 lokal aktif pada port `5432`.
+- **Database**: MySQL 8.x / MariaDB lokal aktif pada port `3306` (misal via Laragon atau XAMPP).
 - **Operating System**: Windows (PowerShell) / Linux / macOS.
 
 ---
@@ -47,13 +47,14 @@ Salin file `.env.example` menjadi `.env`:
 ```powershell
 Copy-Item .env.example .env
 ```
-Pastikan variabel database pada file `.env` telah disesuaikan:
+Pastikan variabel database pada file `.env` telah disesuaikan (default Laragon MySQL port 3306):
 ```ini
-PGHOST=127.0.0.1
-PGPORT=5432
-PGUSER=postgres
-PGPASSWORD=##fathirdatabase$$1014
-PGDATABASE=zero_trust_db
+DB_CLIENT=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=zero_trust_db
 ```
 
 ### Langkah 4: Pembuatan Kunci Kriptografi Asimetris (RS256)
@@ -108,14 +109,20 @@ Buka peramban (browser) di: **`http://localhost:5173`**
 
 Pada halaman login terdapat tombol **"Akun Demo Cepat"** untuk pengujian satu-klik tanpa perlu mengetik manual:
 
-| Peran (Role) | Nama Pengguna | Password Demo | ID Perangkat Terdaftar (`X-Device-ID`) | Hak Akses Utama |
+| Peran (Role) | Nama Pengguna | Password Demo | ID Perangkat Terdaftar (`X-Device-ID`) | Hak Akses Utama & Kelas yang Diampu |
 |---|---|---|---|---|
-| **Mahasiswa 1** | `mahasiswa1` | `PasswordMhs123!` | `dev-mhs1-thinkpad-01` | Nilai sendiri (IF3101 & IF2204), transkrip sendiri (NIM: 2207051001) |
-| **Mahasiswa 2** | `mahasiswa2` | `PasswordMhs123!` | `dev-mhs2-laptop-02` | Nilai sendiri, transkrip sendiri (NIM: 2207051002) |
-| **Mahasiswa 3** | `mahasiswa3` | `PasswordMhs123!` | `dev-mhs3-desktop-03` | Nilai sendiri (IF3101), transkrip sendiri (NIM: 2207051003) |
-| **Dosen 1** | `dosen1` | `PasswordDosen123!` | `dev-dosen1-laptop-01` | Mengampu Kelas A (Keamanan Informasi IF3101), edit & finalisasi nilai |
-| **Dosen 2** | `dosen2` | `PasswordDosen123!` | `dev-dosen2-macbook-02` | Mengampu Kelas B (Basis Data Lanjut IF2204), edit & finalisasi nilai |
-| **Admin** | `admin1` | `PasswordAdmin123!` | `dev-admin-chrome-01` | Membaca seluruh transkrip mahasiswa, melihat Audit Trail PEP |
+| **Admin 1** | `admin1` | `PasswordAdmin123!` | `dev-admin-chrome-01` | Membaca seluruh transkrip mahasiswa, melihat Audit Trail PEP |
+| **Admin 2** | `admin2` | `PasswordAdmin123!` | `dev-admin-laptop-02` | Administrator Akademik, membaca seluruh transkrip & Audit Trail |
+| **Dosen 1** | `dosen1` | `PasswordDosen123!` | `dev-dosen1-laptop-01` | Mengampu **Kelas A** (Keamanan Informasi IF3101), edit & finalisasi nilai |
+| **Dosen 2** | `dosen2` | `PasswordDosen123!` | `dev-dosen2-macbook-02` | Mengampu **Kelas B** (Basis Data Lanjut IF2204), edit & finalisasi nilai |
+| **Dosen 3** | `dosen3` | `PasswordDosen123!` | `dev-dosen3-thinkpad-03` | Mengampu **Kelas C** (Rekayasa Perangkat Lunak IF3105), edit & finalisasi nilai |
+| **Dosen 4** | `dosen4` | `PasswordDosen123!` | `dev-dosen4-desktop-04` | Mengampu **Kelas D** (Jaringan Komputer Lanjut IF2208), edit & finalisasi nilai |
+| **Mahasiswa 1** | `mahasiswa1` | `PasswordMhs123!` | `dev-mhs1-thinkpad-01` | Nilai sendiri (Kelas A, B, D), transkrip sendiri (NIM: 2207051001) |
+| **Mahasiswa 2** | `mahasiswa2` | `PasswordMhs123!` | `dev-mhs2-laptop-02` | Nilai sendiri (Kelas A, B), transkrip sendiri (NIM: 2207051002) |
+| **Mahasiswa 3** | `mahasiswa3` | `PasswordMhs123!` | `dev-mhs3-desktop-03` | Nilai sendiri (Kelas A, C, D), transkrip sendiri (NIM: 2207051003) |
+| **Mahasiswa 4** | `mahasiswa4` | `PasswordMhs123!` | `dev-mhs4-laptop-04` | Nilai sendiri (Kelas A, C), transkrip sendiri (NIM: 2207051004) |
+| **Mahasiswa 5** | `mahasiswa5` | `PasswordMhs123!` | `dev-mhs5-phone-05` | Nilai sendiri (Kelas B, C, D), transkrip sendiri (NIM: 2207051005) |
+| **Mahasiswa 6** | `mahasiswa6` | `PasswordMhs123!` | `dev-mhs6-mac-06` | Nilai sendiri (Kelas B, C, D), transkrip sendiri (NIM: 2207051006) |
 | *Simulasi Ilegal* | `mahasiswa1` | `PasswordMhs123!` | `device-asing-ilegal-999` | **DITOLAK (403 Policy Deny)** — Simulasi penolakan perangkat asing |
 
 > **PERINGATAN:** Seluruh kredensial di atas dibuat khusus untuk lingkungan demonstrasi lokal. Jangan pernah menggunakan password atau kredensial ini di lingkungan publik/internet.
@@ -157,7 +164,7 @@ Informasi mendalam dan analisis teknis tersedia pada folder `docs/`:
 | Gejala Masalah | Penyebab Umum | Solusi |
 |---|---|---|
 | `EADDRINUSE: address already in use :::3000` (atau 3001/3002/5173) | Ada proses node yang masih menggantung dari eksekusi sebelumnya. | Hentikan proses via PowerShell: `Get-Process node \| Stop-Process -Force` |
-| `password authentication failed for user "postgres"` | Password PostgreSQL pada file `.env` belum sesuai dengan master password lokal Anda. | Periksa variabel `PGPASSWORD` pada file `.env`. |
+| `Access denied for user 'root'@'localhost'` (atau koneksi DB gagal) | Kredensial MySQL pada file `.env` belum sesuai dengan konfigurasi Laragon/XAMPP lokal Anda. | Periksa variabel `DB_USER` dan `DB_PASSWORD` pada file `.env`, serta pastikan MySQL aktif di port 3306. |
 | `RSA Private key not found` | Belum menjalankan pembuatan kunci enkripsi. | Jalankan `npm run keys:gen`. |
 | `CLASS_FINALIZED` saat update nilai | Nilai kelas telah difinalisasi dosen dan terkunci (read-only). | Status kelas bersifat permanen sesuai prinsip Zero Trust. Untuk menguji ulang, jalankan `npm run db:reset`. |
 | `OUTSIDE_ACCESS_WINDOW` | Request dilakukan di luar pukul 07:00 – 21:00 WIB. | Sesuaikan jam server atau ubah `ACCESS_WINDOW_START` / `ACCESS_WINDOW_END` pada `.env`. |

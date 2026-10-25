@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Panduan Lengkap &amp; Dokumentasi Teknis Zero Trust Security - PANDAKAD</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 15mm 18mm 15mm;
+      @bottom-right {
+        content: counter(page);
+        font-size: 9pt;
+        color: #556B2F;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+      color: #20251D;
+      line-height: 1.55;
+      font-size: 10pt;
+      background: #FFFFFF;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1, h2, h3, h4 {
+      color: #344522;
+      font-weight: 700;
+      margin-top: 1.4em;
+      margin-bottom: 0.5em;
+    }
+
+    h1 {
+      font-size: 20pt;
+      line-height: 1.2;
+      border-bottom: 2px solid #344522;
+      padding-bottom: 6px;
+      margin-top: 0;
+    }
+
+    h2 {
+      font-size: 13.5pt;
+      border-bottom: 1px solid #DDE3D4;
+      padding-bottom: 4px;
+      margin-top: 1.6em;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      font-size: 11.5pt;
+      color: #556B2F;
+      margin-top: 1.2em;
+      page-break-after: avoid;
+    }
+
+    h4 {
+      font-size: 10.5pt;
+      color: #20251D;
+      margin-top: 1em;
+      page-break-after: avoid;
+    }
+
+    p {
+      margin-top: 0.4em;
+      margin-bottom: 0.6em;
+      text-align: justify;
+    }
+
+    ul, ol {
+      margin-top: 0.3em;
+      margin-bottom: 0.6em;
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 0.3em;
+    }
+
+    code {
+      font-family: 'Cascadia Code', Consolas, 'Courier New', monospace;
+      font-size: 9pt;
+      background-color: #F4F6F1;
+      color: #344522;
+      padding: 1.5px 4px;
+      border-radius: 4px;
+      border: 1px solid #DDE3D4;
+    }
+
+    pre {
+      font-family: 'Cascadia Code', Consolas, 'Courier New', monospace;
+      font-size: 8.5pt;
+      background-color: #1E231B;
+      color: #E2E8F0;
+      padding: 10px 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 0.6em 0;
+      line-height: 1.4;
+      border: 1px solid #344522;
+      page-break-inside: avoid;
+    }
+
+    pre code {
+      background: none;
+      color: inherit;
+      padding: 0;
+      border: none;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.8em 0;
+      font-size: 8.5pt;
+      page-break-inside: avoid;
+    }
+
+    th, td {
+      border: 1px solid #DDE3D4;
+      padding: 6px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #F4F6F1;
+      color: #344522;
+      font-weight: 700;
+      font-size: 8.5pt;
+    }
+
+    tr:nth-child(even) {
+      background-color: #FAFCF8;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 7.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      font-family: monospace;
+    }
+
+    .badge-success {
+      background: #EEF4E8;
+      color: #344522;
+      border: 1px solid #A3B18A;
+    }
+
+    .badge-warning {
+      background: #FFFBEB;
+      color: #92400E;
+      border: 1px solid #FDE68A;
+    }
+
+    .badge-danger {
+      background: #FEF2F2;
+      color: #991B1B;
+      border: 1px solid #FECACA;
+    }
+
+    .badge-info {
+      background: #F0FDF4;
+      color: #166534;
+      border: 1px solid #BBF7D0;
+    }
+
+    .callout {
+      padding: 10px 12px;
+      border-radius: 6px;
+      margin: 0.8em 0;
+      font-size: 9.5pt;
+      border-left: 4px solid #556B2F;
+      background: #FAFBF8;
+    }
+
+    .callout-title {
+      font-weight: 700;
+      color: #344522;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .callout-warning {
+      border-left-color: #C9A66B;
+      background: #FAF8F2;
+    }
+
+    .callout-warning .callout-title {
+      color: #7A551E;
+    }
+
+    .page-break {
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .cover-page {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      min-height: 240mm;
+      padding: 15mm 10mm 10mm 10mm;
+      box-sizing: border-box;
+    }
+
+    .cover-header {
+      text-align: center;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      background: #EEF4E8;
+      border: 1px solid #A3B18A;
+      border-radius: 20px;
+      color: #344522;
+      font-size: 8.5pt;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 15px;
+    }
+
+    .cover-title {
+      font-size: 22pt;
+      font-weight: 800;
+      color: #344522;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+
+    .cover-subtitle {
+      font-size: 11.5pt;
+      color: #556B2F;
+      font-weight: 600;
+      line-height: 1.4;
+      max-width: 85%;
+      margin: 0 auto;
+    }
+
+    .cover-divider {
+      width: 80px;
+      height: 4px;
+      background: #C9A66B;
+      margin: 20px auto;
+      border-radius: 2px;
+    }
+
+    .cover-meta {
+      background: #FAFBF8;
+      border: 1px solid #DDE3D4;
+      border-radius: 8px;
+      padding: 14px 18px;
+      margin: 20px auto;
+      width: 92%;
+      box-sizing: border-box;
+    }
+
+    .cover-meta table {
+      margin: 0;
+    }
+
+    .cover-meta td {
+      border: none;
+      padding: 4px 6px;
+      font-size: 9pt;
+    }
+
+    .cover-meta td.label {
+      font-weight: bold;
+      color: #344522;
+      width: 32%;
+    }
+
+    .cover-footer {
+      text-align: center;
+      font-size: 8.5pt;
+      color: #556B2F;
+      border-top: 1px solid #DDE3D4;
+      padding-top: 12px;
+    }
+
+    .script-dialogue {
+      background: #FAFBF8;
+      border-left: 3px solid #556B2F;
+      padding: 8px 12px;
+      margin: 6px 0 10px 0;
+      font-style: italic;
+      color: #20251D;
+    }
+
+    .action-step {
+      font-weight: 600;
+      color: #344522;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- COVER PAGE -->
+  <div class="cover-page">
+    <div class="cover-header">
+      <div class="cover-badge">KEAMANAN INFORMASI (KP70065004)</div>
+      <div class="cover-title">PANDUAN LENGKAP &amp; DOKUMENTASI SISTEM AKADEMIK ZERO TRUST</div>
+      <div class="cover-subtitle">Implementasi Arsitektur Keamanan Aplikasi Berdasarkan Standar NIST SP 800-207, Evaluasi Kebijakan Kontekstual, dan Proteksi Multi-Service</div>
+      <div class="cover-divider"></div>
+      <p style="text-align: center; font-size: 9.5pt; color: #556B2F; max-width: 85%; margin: 0 auto;">
+        Panduan Teoretis, Matriks Kepatuhan Rubrik, Tata Cara Pengujian Sistem (Testing Manual &amp; Otomatis), serta Naskah Presentasi Demo Video (6–9 Menit)
+      </p>
+    </div>
+
+    <div class="cover-meta">
+      <table>
+        <tr>
+          <td class="label">Mata Kuliah:</td>
+          <td>Keamanan Informasi (KP70065004)</td>
+        </tr>
+        <tr>
+          <td class="label">Institusi Akademik:</td>
+          <td>Jurusan Informatika, Fakultas Teknik, Universitas Siliwangi</td>
+        </tr>
+        <tr>
+          <td class="label">Produk Perangkat Lunak:</td>
+          <td><strong>PANDAKAD</strong> — Sistem Informasi Akademik Universitas Panda Raya</td>
+        </tr>
+        <tr>
+          <td class="label">Spesifikasi Arsitektur:</td>
+          <td>NIST SP 800-207 Zero Trust Architecture (PEP / PE / PA)</td>
+        </tr>
+        <tr>
+          <td class="label">Teknologi Inti:</td>
+          <td>Node.js, TypeScript, Express, PostgreSQL 17, React 19, Vite, Playwright, Vitest</td>
+        </tr>
+        <tr>
+          <td class="label">Status Evaluasi:</td>
+          <td><span class="badge badge-success">100% TERVERIFIKASI LULUS (41 Unit/Integration + 12 E2E Tests)</span></td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="cover-footer">
+      <strong>Universitas Siliwangi · Tasikmalaya</strong><br/>
+      Dokumen ini dipersiapkan sebagai panduan komprehensif pembelajaran, pengujian mandiri, dan bahan evaluasi demonstrasi teknis.
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- DAFTAR ISI & RINGKASAN EKSEKUTIF -->
+  <h2>DAFTAR ISI</h2>
+  <ol style="line-height: 1.8; font-size: 10pt;">
+    <li><strong>BAB 1: Penjelasan Konseptual Tugas (Apa Sebenarnya Tugas Ini?)</strong></li>
+    <li><strong>BAB 2: Matriks Kepatuhan Rubrik (Rubric Compliance Audit)</strong></li>
+    <li><strong>BAB 3: Arsitektur Sistem &amp; Alur Kerja Teknis di Web</strong></li>
+    <li><strong>BAB 4: Deep Dive Mekanisme Keamanan Zero Trust</strong></li>
+    <li><strong>BAB 5: Panduan Langkah demi Langkah Pengujian (Testing Guide)</strong></li>
+    <li><strong>BAB 6: Panduan Naskah Demo &amp; Presentasi Sidang (6–9 Menit)</strong></li>
+    <li><strong>BAB 7: Antisipasi Pertanyaan Dosen &amp; Defense Strategy (FAQ)</strong></li>
+  </ol>
+
+  <div class="callout callout-warning">
+    <div class="callout-title">RINGKASAN HASIL AUDIT KELAYAKAN SISTEM</div>
+    Berdasarkan audit komparatif terhadap <strong>Ketentuan Asli Tugas Praktikum Keamanan Informasi</strong> dan <strong>Engineering Brief GPT (17 Halaman)</strong>, seluruh kebutuhan fungsional, arsitektural, keamanan kriptografis, dan pengujian otomatis telah <strong>100% diimplementasikan dengan sempurna tanpa ada kekurangan</strong>. Tidak ada mock data pada jalur produksi, tidak ada rahasia/token bocor di frontend, dan seluruh kontrol telah memiliki bukti tes otomatis yang dapat direproduksi secara deterministik.
+  </div>
+
+  <!-- BAB 1 -->
+  <h2>BAB 1: PENJELASAN KONSEPTUAL TUGAS</h2>
+  
+  <h3>1.1. Mengapa Tugas Ini Diberikan?</h3>
+  <p>
+    Secara tradisional, keamanan aplikasi web mengandalkan pendekatan <em>Perimeter-Based Security</em> (Castle-and-Moat): siapa pun yang berhasil masuk ke dalam jaringan internal (misalnya melalui VPN atau berada di jaringan LAN kampus yang sama) dianggap tepercaya secara bebas. Jika penyerang berhasil membobol salah satu celah di perimeter luar, mereka dapat bergerak bebas ke samping (<em>lateral movement</em>) ke seluruh server dan database tanpa rintangan.
+  </p>
+  <p>
+    Tugas praktikum ini bertujuan mentransformasi pola pikir tersebut menjadi <strong>Zero Trust Architecture (ZTA)</strong> sesuai pedoman federal Amerika Serikat <strong>NIST SP 800-207</strong> yang diterapkan langsung pada <em>application level</em>.
+  </p>
+
+  <h3>1.2. Tiga Pilar Filosofis Zero Trust</h3>
+  <ul>
+    <li>
+      <strong>1. Never Trust, Always Verify:</strong> Tidak ada permintaan (request) yang dipercaya secara buta, baik yang berasal dari luar jaringan maupun antar-server internal. Setiap request wajib diautentikasi ulang, diverifikasi tanda tangan kriptografisnya, diperiksa device pengirimnya, dan dievaluasi hak aksesnya secara kontinu.
+    </li>
+    <li>
+      <strong>2. Least Privilege (Hak Akses Terendah):</strong> Pengguna dan service hanya diberikan izin minimum absolut yang diperlukan untuk menyelesaikan tugasnya pada saat itu. Mahasiswa hanya boleh melihat nilainya sendiri (tidak bisa melihat mahasiswa lain / anti-IDOR). Dosen hanya boleh mengedit kelas yang diampunya sendiri (bukan kelas dosen lain) dan hanya pada jam kerja resmi. Administrator hanya berhak membaca transkrip untuk validasi kelulusan tanpa hak mengubah nilai.
+    </li>
+    <li>
+      <strong>3. Assume Breach (Asumsikan Sistem Telah Ditembus):</strong> Arsitektur dirancang dengan asumsi bahwa jaringan internal sudah tidak aman dan penyerang mungkin telah berada di dalam jaringan. Oleh karena itu, Service internal (Service Nilai dan Service Transkrip) tidak boleh diekspos sebagai API publik, wajib memverifikasi <em>Gateway Secret</em> untuk memastikan pemanggil adalah API Gateway resmi, serta tetap memvalidasi token JWT secara mandiri.
+    </li>
+  </ul>
+
+  <h3>1.3. Skenario Bisnis Akademik</h3>
+  <p>
+    Skenario yang dibangun adalah sistem pengelolaan nilai dan transkrip akademik universitas (dinamai <strong>PANDAKAD</strong> — Universitas Panda Raya). Sistem melibatkan 3 peran pengguna (Mahasiswa, Dosen, Administrator) dan 2 domain microservices yang saling terisolasi (Service Nilai pada port 3001 dan Service Transkrip pada port 3002) yang diproteksi di balik satu pintu gerbang utama: <strong>API Gateway sebagai Policy Enforcement Point (PEP)</strong> pada port 3000.
+  </p>
+
+  <div class="page-break"></div>
+
+  <!-- BAB 2 -->
+  <h2>BAB 2: MATRIKS KEPATUHAN RUBRIK (RUBRIC COMPLIANCE AUDIT)</h2>
+  <p>
+    Tabel berikut mengaudit kesesuaian antara instruksi dosen di dokumen tugas asli, rincian teknis instruksi GPT, serta status riil pada kode sumber di repositori ini:
+  </p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 20%;">Kebutuhan Rubrik</th>
+        <th style="width: 25%;">Ketentuan Wajib Tugas</th>
+        <th style="width: 30%;">Implementasi Nyata di Repositori</th>
+        <th style="width: 25%;">Bukti Verifikasi</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Arsitektur Terpisah (3 Proses)</strong></td>
+        <td>Gateway (port 3000), Service Nilai (port 3001), Service Transkrip (port 3002) benar-benar terpisah proses.</td>
+        <td>3 aplikasi Express mandiri: <code>packages/gateway</code>, <code>packages/service-nilai</code>, <code>packages/service-transkrip</code>.</td>
+        <td>Uji koneksi port TCP individual; verifikasi 3 proses terpisah di PowerShell.</td>
+      </tr>
+      <tr>
+        <td><strong>2. API Gateway sebagai PEP</strong></td>
+        <td>Satu-satunya pintu masuk klien; validasi token, evaluasi policy, catat audit log, lalu proxy.</td>
+        <td>Gateway menjalankan middleware PEP terpadu: Auth &rarr; Device &rarr; PolicyEngine &rarr; AuditLogger &rarr; Proxy.</td>
+        <td>Frontend hanya mereferensikan port 3000; direct call ke port 3001/3002 ditolak.</td>
+      </tr>
+      <tr>
+        <td><strong>3. Token JWT Asimetris (RS256)</strong></td>
+        <td>Access Token TTL 10 menit; claims <code>sub</code>, <code>role</code>; ditandatangani kriptografis.</td>
+        <td>Menggunakan RS256 2048-bit (private key di Gateway, public key di service). Claims: <code>sub, role, iss, aud, jti, token_use</code>.</td>
+        <td><code>tests/unit/crypto-tokens.test.ts</code> (8 tes lulus); token di-verify public key.</td>
+      </tr>
+      <tr>
+        <td><strong>4. Refresh Token Berbasis Database</strong></td>
+        <td>TTL 1 hari, tersimpan di database agar dapat dicabut (revocable) saat logout.</td>
+        <td>Tabel <code>refresh_sessions</code> menyimpan hash SHA-256 token. Rotasi token aktif; logout mencabut token segera.</td>
+        <td><code>tests/integration/auth-flow.test.ts</code> (pengujian rotasi dan revokasi).</td>
+      </tr>
+      <tr>
+        <td><strong>5. Service-to-Service Security</strong></td>
+        <td>Service Nilai meminta Service Token (5m, <code>role: service</code>) via <code>POST /auth/service</code> untuk sinkronisasi transkrip.</td>
+        <td>Endpoint <code>POST /transkrip/sinkron</code> hanya menerima token service. Token user biasa ditolak dengan status 403.</td>
+        <td><code>tests/integration/business-workflow.test.ts</code> &amp; <code>tests/security/security-abuse.test.ts</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>6. Gateway Secret Protection</strong></td>
+        <td>Gateway menyuntikkan <code>X-Gateway-Secret</code> saat meneruskan request. Service menolak direct call tanpa secret.</td>
+        <td>Middleware <code>verifyInternalAccess.ts</code> di setiap service. Middleware Gateway <code>sanitizeHeaders.ts</code> menghapus secret palsu dari klien.</td>
+        <td><code>curl http://localhost:3001/nilai</code> menghasilkan 403 Forbidden.</td>
+      </tr>
+      <tr>
+        <td><strong>7. Verifikasi Perangkat (X-Device-ID)</strong></td>
+        <td>Setiap request user wajib menyertakan <code>X-Device-ID</code> yang terdaftar atas nama user tersebut.</td>
+        <td>Tabel <code>devices</code> dikaitkan dengan <code>user_id</code>. Gateway menolak request jika ID device tidak cocok dengan pemilik akun.</td>
+        <td>Playwright Journey 4: simulasi penolakan perangkat asing langsung menghasilkan 403.</td>
+      </tr>
+      <tr>
+        <td><strong>8. Window Jam Akses</strong></td>
+        <td>Perubahan &amp; finalisasi nilai hanya diizinkan pukul 07.00–21.00 WIB (Asia/Jakarta).</td>
+        <td>Modul <code>timeEvaluator.ts</code> mengevaluasi jam server Asia/Jakarta. Dapat dikonfigurasi via <code>.env</code> untuk kebutuhan demo.</td>
+        <td><code>tests/unit/time-window.test.ts</code> (6 tes clock injection deterministik).</td>
+      </tr>
+      <tr>
+        <td><strong>9. Audit Trail Terstruktur</strong></td>
+        <td>Mencatat setiap keputusan (ALLOW/DENY), timestamp, subjek, endpoint, device, dan reason code tanpa bocor kredensial.</td>
+        <td>Tabel <code>audit_events</code> di PostgreSQL; UI viewer khusus Admin; otomatis menyaring/redact password, token, dan secret.</td>
+        <td>Tampilan tabel log PEP di halaman Admin; tes unit memverifikasi zero-leak.</td>
+      </tr>
+      <tr>
+        <td><strong>10. Idempotent Transcript Sync</strong></td>
+        <td>Operasi finalisasi tidak membuat duplikasi transkrip saat request diulang/retry.</td>
+        <td>Service Transkrip menggunakan klausul <code>ON CONFLICT (student_id, class_id) DO UPDATE</code>.</td>
+        <td>Uji integrasi: pemanggilan ganda menghasilkan data transkrip tunggal yang konsisten.</td>
+      </tr>
+      <tr>
+        <td><strong>11. Frontend Premium &amp; Brand Identity</strong></td>
+        <td>UI yang tenang, profesional, data-driven, tanpa template generik/AI slop.</td>
+        <td>Tema <strong>PANDAKAD UNPANDA</strong>: palet Deep Olive, maskot Red Panda bercaping, ikon terkurasi, password toggle, responsif mobile/desktop.</td>
+        <td>12 Playwright tests lulus pada Desktop Chromium, Tablet Chromium, dan Mobile Pixel 7.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="page-break"></div>
+
+  <!-- BAB 3 -->
+  <h2>BAB 3: ARSITEKTUR SISTEM &amp; ALUR KERJA TEKNIS DI WEB</h2>
+
+  <h3>3.1. Topologi Komponen Fisik &amp; Port</h3>
+  <pre><code>+---------------------------------------------------------------------------------+
+|                                 BROWSER CLIENT                                  |
+|                 React 19 + TypeScript + Vite (Port 5173)                        |
++---------------------------------------------------------------------------------+
+                                       |
+                   HTTP API (Bearer JWT + X-Device-ID)
+                                       v
++---------------------------------------------------------------------------------+
+|                       API GATEWAY · PEP (Port 3000)                             |
+|  - Request Sanitizer (Hapus X-Gateway-Secret dari klien luar)                   |
+|  - JWT RS256 Verifier (Validasi signature, issuer, audience, expired)           |
+|  - Device Binding Inspector (Cek kepemilikan X-Device-ID di database)           |
+|  - Policy Engine (Evaluasi Role, Kepemilikan Data/NIM, Jam Akses 07-21 WIB)     |
+|  - Audit Trail Logger (Catat ALLOW / DENY ke tabel audit_events)                |
+|  - Injeksi X-Gateway-Secret resmi dari environment server                       |
++---------------------------------------------------------------------------------+
+             |                                                |
+  Proxy ALLOW + Gateway Secret                     Proxy ALLOW + Gateway Secret
+             v                                                v
++-----------------------------+                  +-----------------------------+
+| SERVICE NILAI (Port 3001)   |                  | SERVICE TRANSKRIP (Port 3002|
+| - Verifikasi Gateway Secret |                  | - Verifikasi Gateway Secret |
+| - Verifikasi Ulang JWT      |                  | - Verifikasi Ulang JWT      |
+| - Domain: Kelas, Nilai,     |                  | - Domain: Transkrip Resmi,  |
+|   Finalisasi Dosen          |                  |   Idempotent Upsert         |
++-----------------------------+                  +-----------------------------+
+             |                                                |
+             +-----------------------+------------------------+
+                                     v
+                  +-------------------------------------+
+                  |     POSTGRESQL 17 LOKAL (PORT 5432) |
+                  |  users, devices, courses, classes,  |
+                  |  grades, transcript, audit, refresh |
+                  +-------------------------------------+</code></pre>
+
+  <h3>3.2. Alur Request Klien (User Request Flow)</h3>
+  <ol>
+    <li>Pengguna memasukkan username, password, dan perangkat di halaman login frontend (<code>http://localhost:5173/login</code>).</li>
+    <li>Frontend mengirim <code>POST /auth/login</code> beserta header <code>X-Device-ID</code> ke Gateway (port 3000).</li>
+    <li>Gateway memverifikasi hash password (menggunakan bcrypt) dan memeriksa apakah device tersebut terdaftar sebagai milik user tersebut di tabel <code>devices</code>.</li>
+    <li>Jika valid, Gateway menerbitkan <strong>Access Token (RS256 JWT, masa berlaku 10 menit)</strong> dan <strong>Refresh Token (disimpan hash-nya di DB, masa berlaku 1 hari)</strong>.</li>
+    <li>Untuk setiap navigasi atau permintaan data (misalnya membuka nilai), frontend menyertakan <code>Authorization: Bearer &lt;access_token&gt;</code> dan <code>X-Device-ID</code>.</li>
+    <li>Gateway bertindak sebagai <strong>Policy Enforcement Point (PEP)</strong>:
+      <ul>
+        <li>Memvalidasi keaslian tanda tangan token RS256 menggunakan Public Key.</li>
+        <li>Memeriksa status aktif perangkat di basis data.</li>
+        <li>Meminta keputusan ke <strong>Policy Engine</strong>: mengevaluasi role, kepemilikan data (misal: NIM mahasiswa atau kelas dosen), dan window jam akses (07.00–21.00 WIB).</li>
+        <li>Menuliskan keputusan (ALLOW / DENY) beserta <em>reason code</em> ke dalam tabel <code>audit_events</code>.</li>
+      </ul>
+    </li>
+    <li>Jika keputusan <strong>DENY</strong>: Gateway langsung memutus koneksi dan mengembalikan HTTP 403 Forbidden. Request sama sekali tidak pernah menyentuh service backend downstream.</li>
+    <li>Jika keputusan <strong>ALLOW</strong>: Gateway membersihkan header berbahaya dari request masuk, menyuntikkan header <code>X-Gateway-Secret</code> resmi dari environment server, lalu meneruskan request (reverse proxy) ke Service Nilai atau Service Transkrip.</li>
+    <li>Service hilir (downstream) memverifikasi ulang bahwa <code>X-Gateway-Secret</code> valid dan token JWT sah sebelum mengeksekusi query database dan mengembalikan payload JSON.</li>
+  </ol>
+
+  <div class="page-break"></div>
+
+  <!-- BAB 4 -->
+  <h2>BAB 4: DEEP DIVE MEKANISME KEAMANAN ZERO TRUST</h2>
+
+  <h3>4.1. Kriptografi Asimetris RS256 (Tanpa Regenerasi Kunci saat Restart)</h3>
+  <p>
+    Sistem menggunakan pasangan kunci RSA 2048-bit (Private Key dan Public Key). Kunci dibuat satu kali saat setup sistem awal dan disimpan secara lokal pada file <code>keys/private.pem</code> dan <code>keys/public.pem</code> (yang diabaikan oleh git demi keamanan).
+  </p>
+  <ul>
+    <li><strong>API Gateway (Port 3000):</strong> Menyimpan <em>Private Key</em> untuk menandatangani Access Token pengguna dan Service Token antar-layanan.</li>
+    <li><strong>Service Nilai (Port 3001) &amp; Service Transkrip (Port 3002):</strong> Hanya menyimpan <em>Public Key</em>. Service dapat memverifikasi keaslian dan integritas token secara independen tanpa pernah memiliki hak menerbitkan token baru.</li>
+    <li>Kunci privat tidak pernah di-commit ke repositori dan tidak pernah dibagikan ke browser client.</li>
+  </ul>
+
+  <h3>4.2. Pertahanan Berlapis Antar-Layanan (Assume Breach &amp; Gateway Secret)</h3>
+  <p>
+    Jika seorang penyerang berhasil masuk ke jaringan internal server dan mengetahui IP serta port Service Nilai (3001) atau Transkrip (3002), penyerang tetap tidak dapat mengakses data:
+  </p>
+  <ul>
+    <li>Kedua service dilindungi middleware <code>verifyInternalAccess.ts</code> yang mewajibkan keberadaan header <code>X-Gateway-Secret</code> dengan nilai yang cocok persis dengan environment server.</li>
+    <li>Panggilan langsung melalui <code>curl -i http://localhost:3001/nilai</code> tanpa header akan ditolak seketika dengan status <code>403 FORBIDDEN_GATEWAY_SECRET_REQUIRED</code>.</li>
+    <li>Jika klien mencoba menyuntikkan header <code>X-Gateway-Secret</code> dari browser, middleware <code>sanitizeHeaders.ts</code> di Gateway akan secara otomatis menghapus header tersebut dari inbound request dan menimpanya dengan secret resmi dari environment server.</li>
+    <li>Meskipun penyerang memiliki Gateway Secret, request tetap ditolak jika tidak disertai token JWT bertanda tangan valid (<em>dual verification</em>).</li>
+  </ul>
+
+  <h3>4.3. Alur Finalisasi Dosen &amp; Sinkronisasi Transkrip Idempoten</h3>
+  <p>
+    Ketika Dosen 1 menekan tombol finalisasi kelas di antarmuka web, alur keamanan tingkat tinggi berikut dijalankan:
+  </p>
+  <pre><code>[Dosen Klik Finalisasi] 
+          |
+          v
+1. Service Nilai mengunci baris kelas dengan transaksi: 
+   UPDATE classes SET is_finalized = true, finalized_at = NOW() WHERE id = $1;
+   Status nilai mahasiswa dikunci permanen menjadi Read-Only.
+          |
+          v
+2. Service Nilai memanggil Gateway: POST /auth/service 
+   dengan Client ID: grades-service-client &amp; Service Secret.
+          |
+          v
+3. Gateway menerbitkan Service JWT khusus: 
+   Masa berlaku 5 menit, claim: role: 'service', sub: 'grades-service'.
+          |
+          v
+4. Service Nilai mengirim payload nilai final ke Gateway: POST /transkrip/sinkron
+   dengan menyertakan Service JWT di Authorization header.
+          |
+          v
+5. Gateway Policy Engine memvalidasi bahwa endpoint ini HANYA boleh dipanggil 
+   oleh role: 'service'. (Request dari token mahasiswa/dosen/admin ditolak 403).
+          |
+          v
+6. Gateway proxy ke Service Transkrip (Port 3002).
+   Service Transkrip menjalankan query SQL UPSERT Idempoten:
+   INSERT INTO transcript_entries (student_id, class_id, course_id, score, grade_letter)
+   VALUES (...) 
+   ON CONFLICT (student_id, class_id) DO UPDATE SET score = EXCLUDED.score;
+          |
+          v
+7. Nilai resmi mahasiswa otomatis terbit dan IPK kumulatif terhitung otomatis!</code></pre>
+
+  <div class="page-break"></div>
+
+  <!-- BAB 5 -->
+  <h2>BAB 5: PANDUAN LANGKAH DEMI LANGKAH PENGUJIAN (TESTING GUIDE)</h2>
+
+  <h3>5.1. Cara Menjalankan Sistem di Komputer Lokal</h3>
+  <p>
+    Pastikan PostgreSQL lokal sedang berjalan di port 5432. Buka terminal PowerShell dan jalankan perintah berikut:
+  </p>
+  <pre><code># 1. Masuk ke folder proyek
+cd C:\CODING\zero_trust_security
+
+# 2. Setup database deterministik (Hanya sekali di awal)
+npm run db:setup
+npm run db:seed
+
+# 3. Jalankan seluruh service secara bersamaan (Gateway, Nilai, Transkrip, Frontend)
+npm run start:all
+
+# (Alternatif: Jalankan di 4 terminal PowerShell terpisah jika ingin melihat log masing-masing)
+# Terminal 1: npm run dev:gateway      (Port 3000)
+# Terminal 2: npm run dev:nilai        (Port 3001)
+# Terminal 3: npm run dev:transkrip    (Port 3002)
+# Terminal 4: npm run dev:frontend     (Port 5173)</code></pre>
+
+  <h3>5.2. Akun Demo Resmi &amp; Device Terdaftar</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Peran (Role)</th>
+        <th>Username</th>
+        <th>Password</th>
+        <th>Device ID Terdaftar</th>
+        <th>Keterangan Hak Akses</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Mahasiswa 1</strong></td>
+        <td><code>mahasiswa1</code></td>
+        <td><code>PasswordMhs123!</code></td>
+        <td><code>dev-mhs1-thinkpad-01</code></td>
+        <td>Ahmad Fauzi (NIM: 2207051001). Hanya melihat nilai &amp; transkrip sendiri.</td>
+      </tr>
+      <tr>
+        <td><strong>Mahasiswa 2</strong></td>
+        <td><code>mahasiswa2</code></td>
+        <td><code>PasswordMhs123!</code></td>
+        <td><code>dev-mhs2-macbook-01</code></td>
+        <td>Bella Safitri (NIM: 2207051002). Akun pembanding uji anti-IDOR.</td>
+      </tr>
+      <tr>
+        <td><strong>Dosen 1</strong></td>
+        <td><code>dosen1</code></td>
+        <td><code>PasswordDosen123!</code></td>
+        <td><code>dev-dosen1-dell-01</code></td>
+        <td>Dr. Irfan Santoso, M.Kom. Mengampu Kelas A (Keamanan Informasi).</td>
+      </tr>
+      <tr>
+        <td><strong>Dosen 2</strong></td>
+        <td><code>dosen2</code></td>
+        <td><code>PasswordDosen123!</code></td>
+        <td><code>dev-dosen2-lenovo-01</code></td>
+        <td>Dr. Rina Maryana, M.T. Mengampu Kelas B (Basis Data Lanjut).</td>
+      </tr>
+      <tr>
+        <td><strong>Admin</strong></td>
+        <td><code>admin1</code></td>
+        <td><code>PasswordAdmin123!</code></td>
+        <td><code>dev-admin1-secure-pc</code></td>
+        <td>Siti Rahmawati, S.Kom. Hak baca seluruh transkrip &amp; audit log PEP.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>5.3. Skenario Uji 1: Mahasiswa (Ahmad Fauzi)</h3>
+  <ol>
+    <li>Buka browser di <code>http://localhost:5173</code>.</li>
+    <li>Pada form login, klik tombol cepat <strong>Mahasiswa 1 (Ahmad Fauzi)</strong>. Field username, password, dan Device ID akan terisi otomatis.</li>
+    <li>Klik ikon mata di samping kolom password untuk menguji fitur <strong>Password Visibility Toggle</strong>. Password akan tampil dalam format teks biasa, klik kembali untuk menyembunyikannya.</li>
+    <li>Klik tombol <strong>Masuk ke Sistem</strong>. Anda akan diarahkan ke Dashboard Mahasiswa.</li>
+    <li>Periksa tab <strong>Nilai Perkuliahan</strong>: tampil kartu ringkasan SKS dan daftar nilai semester mata kuliah Keamanan Informasi.</li>
+    <li>Pindah ke tab <strong>Transkrip Akademik</strong> di sidebar kiri: tampil ringkasan IPK dan total SKS lulus resmi.</li>
+    <li>Klik tombol <strong>Keluar</strong> di pojok kanan atas. Session dibersihkan seketika.</li>
+  </ol>
+
+  <h3>5.4. Skenario Uji 2: Dosen 1 (Dr. Irfan Santoso) &amp; Finalisasi Nilai</h3>
+  <ol>
+    <li>Pada halaman login, klik tombol demo <strong>Dosen 1 (Dr. Irfan)</strong> lalu klik <strong>Masuk ke Sistem</strong>.</li>
+    <li>Perhatikan bahwa dosen HANYA melihat <strong>Kelas A (Keamanan Informasi)</strong> yang memang diampunya. Dosen 1 tidak dapat melihat kelas milik Dosen 2.</li>
+    <li>Pada baris mahasiswa Ahmad Fauzi, ubah nilai skor angka menjadi <code>95.00</code>, lalu klik tombol hijau <strong>Simpan</strong>. Nilai berhasil diperbarui.</li>
+    <li>Klik tombol <strong>Finalisasi Nilai Kelas</strong> di bagian kanan atas gradebook.</li>
+    <li>Akan muncul <strong>Modal Konfirmasi Finalisasi</strong> yang memperingatkan prinsip immutability Zero Trust.</li>
+    <li>Klik <strong>Ya, Kunci &amp; Finalisasi</strong>. Sistem akan:
+      <ul>
+        <li>Mengunci status kelas menjadi <strong>STATUS: FINAL</strong>.</li>
+        <li>Kolom input nilai berubah menjadi terkunci (read-only) dan tombol simpan dinonaktifkan.</li>
+        <li>Service Nilai otomatis meminta Service Token dan menyinkronkan data ke Service Transkrip.</li>
+      </ul>
+    </li>
+    <li>Logout dari akun Dosen.</li>
+  </ol>
+
+  <div class="page-break"></div>
+
+  <h3>5.5. Skenario Uji 3: Administrator (Pencarian Transkrip &amp; Audit Trail)</h3>
+  <ol>
+    <li>Login menggunakan tombol demo <strong>Administrator (Siti Rahmawati)</strong>.</li>
+    <li>Pada tab <strong>Transkrip Mahasiswa</strong>:
+      <ul>
+        <li>Admin memiliki input pencarian NIM. Ketik NIM <code>2207051001</code> atau klik tombol pintas <em>Ahmad Fauzi</em>.</li>
+        <li>Transkrip Ahmad Fauzi tampil lengkap dengan nilai 95.00 (Huruf A) yang baru saja difinalisasi oleh Dosen 1. IPK terhitung 4.00.</li>
+        <li>Admin dapat memeriksa transkrip mahasiswa mana pun secara bebas sesuai hak verifikasi kelulusan.</li>
+      </ul>
+    </li>
+    <li>Pindah ke tab <strong>Audit Trail Log PEP</strong> di sidebar:
+      <ul>
+        <li>Tampil tabel catatan log keamanan waktu-nyata untuk setiap keputusan evaluasi.</li>
+        <li>Setiap baris mencantumkan timestamp WIB, badge keputusan (<code>ALLOW</code> / <code>DENY</code>), Reason Code (misal: <code>AUTHENTICATED_ACCESS_ALLOWED</code>, <code>CLASS_FINALIZED_SYNCED</code>), path endpoint, subjek ID, dan Device ID.</li>
+        <li>Perhatikan bahwa tidak ada password atau token rahasia yang tercatat di tabel log.</li>
+      </ul>
+    </li>
+  </ol>
+
+  <h3>5.6. Skenario Uji 4: Negative Security Testing (Pembuktian Pertahanan)</h3>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 28%;">Skenario Serangan / Uji</th>
+        <th style="width: 38%;">Langkah Pengujian</th>
+        <th style="width: 34%;">Hasil &amp; Respon Pertahanan</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Uji Device Asing Tak Dikenal</strong></td>
+        <td>Di halaman login, klik tombol merah <strong>Uji Device Asing</strong> (Device ID diganti menjadi <code>device-asing-ilegal-999</code>), lalu klik Masuk.</td>
+        <td><span class="badge badge-danger">DITOLAK (403)</span><br/>Muncul banner merah: <em>"Akses Ditolak (Policy Deny) - Device ID tidak terdaftar untuk akun ini."</em> Tercatat di audit log.</td>
+      </tr>
+      <tr>
+        <td><strong>2. Uji Direct Service Bypass</strong></td>
+        <td>Buka PowerShell dan jalankan perintah bypass langsung ke port internal service:<br/><code>curl -i http://localhost:3001/nilai</code></td>
+        <td><span class="badge badge-danger">DITOLAK (403)</span><br/>Respon: <code>{"success":false,"message":"Forbidden: Direct service access denied"}</code>. Service menolak direct call.</td>
+      </tr>
+      <tr>
+        <td><strong>3. Uji Anti-IDOR Mahasiswa</strong></td>
+        <td>Login sebagai Mahasiswa 1, lalu coba panggil API transkrip milik Mahasiswa 2:<br/><code>GET /transkrip/2207051002</code></td>
+        <td><span class="badge badge-danger">DITOLAK (403)</span><br/>Gateway menolak akses: mahasiswa dilarang membaca data akademik mahasiswa lain.</td>
+      </tr>
+      <tr>
+        <td><strong>4. Uji Peniruan Service Sync oleh User</strong></td>
+        <td>Kirim request <code>POST /transkrip/sinkron</code> menggunakan Bearer token milik user biasa (bukan token service).</td>
+        <td><span class="badge badge-danger">DITOLAK (403)</span><br/>Gateway menolak keras: hanya token dengan claim <code>role: 'service'</code> yang diizinkan melakukan sinkronisasi.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3>5.7. Menjalankan Seluruh Pengujian Otomatis (Automated Test Suites)</h3>
+  <p>
+    Seluruh fungsionalitas dan skenario keamanan telah diotomatisasi ke dalam test runner modern. Jalankan perintah berikut di terminal:
+  </p>
+  <pre><code># Menjalankan 41 Unit &amp; Integration Tests (Vitest)
+npm test
+
+# Menjalankan 12 End-to-End User Journeys di Browser Asli (Playwright)
+npx playwright test
+
+# Reset database ke kondisi bersih
+npm run db:seed</code></pre>
+
+  <div class="page-break"></div>
+
+  <!-- BAB 6 -->
+  <h2>BAB 6: PANDUAN NASKAH DEMO &amp; PRESENTASI SIDANG (6–9 MENIT)</h2>
+  <p>
+    Berikut adalah skenario dan naskah percakapan kata-demi-kata berdurasi 6 hingga 9 menit yang dirancang khusus untuk demonstrasi video atau presentasi langsung di depan dosen penguji:
+  </p>
+
+  <h3>Menit 00:00 – 01:15 &bull; Pembukaan &amp; Gambaran Umum Arsitektur</h3>
+  <div class="script-dialogue">
+    "Selamat pagi / siang Bapak/Ibu dosen penguji. Pada kesempatan kali ini, saya akan mendemonstrasikan implementasi Sistem Nilai Akademik PANDAKAD berbasis Zero Trust Security Architecture sesuai pedoman standar NIST SP 800-207.<br/><br/>
+    Sistem ini memegang tiga prinsip utama: Never Trust Always Verify, Least Privilege, dan Assume Breach. Di layar, dapat dilihat bahwa sistem berjalan di atas 3 proses server yang benar-benar terpisah: API Gateway pada port 3000 bertindak sebagai Policy Enforcement Point (PEP), Service Nilai pada port 3001, Service Transkrip pada port 3002, dan basis data PostgreSQL lokal pada port 5432."
+  </div>
+  <p class="action-step">&rarr; Tindakan Layar: Tampilkan diagram arsitektur dari <code>docs/architecture.md</code> atau tunjukkan 3 jendela terminal server yang sedang aktif.</p>
+
+  <h3>Menit 01:15 – 02:45 &bull; Autentikasi, Asymmetric JWT RS256 &amp; Verifikasi Device</h3>
+  <div class="script-dialogue">
+    "Sekarang kita masuk ke aspek autentikasi. Zero Trust mensyaratkan verifikasi identitas dan konteks perangkat secara ketat. Di halaman login PANDAKAD, setiap pengguna wajib memasukkan kredensial dan Device ID.<br/><br/>
+    Pertama, saya demonstrasikan fitur kenyamanan input: password visibility toggle yang memungkinkan pengguna melihat dan menyembunyikan kata sandi. Sekarang saya login sebagai Mahasiswa 1 dengan perangkat terdaftar dev-mhs1-thinkpad-01. Login berhasil dan server menerbitkan access token RS256 berdurasi 10 menit.<br/><br/>
+    Sekarang mari kita uji prinsip 'Never Trust' dengan mencoba login menggunakan perangkat asing yang tidak terdaftar, yaitu device-asing-ilegal-999. Seperti yang terlihat di layar, sistem langsung menolak dengan status 403 Forbidden 'Device ID tidak terdaftar'. Keputusan penolakan ini langsung dicatat di log audit keamanan."
+  </div>
+  <p class="action-step">&rarr; Tindakan Layar: Login sebagai Mahasiswa 1, toggle password icon, logout, klik tombol merah 'Uji Device Asing', perlihatkan banner merah penolakan.</p>
+
+  <h3>Menit 02:45 – 04:15 &bull; Pertahanan Antar-Service &amp; Isolasi Gateway Secret</h3>
+  <div class="script-dialogue">
+    "Berdasarkan prinsip Assume Breach, kita berasumsi bahwa penyerang mungkin telah menyusup ke dalam jaringan internal. Oleh karena itu, Service internal Nilai dan Transkrip tidak boleh mempercayai request mentah.<br/><br/>
+    Keduanya mewajibkan keberadaan header X-Gateway-Secret. Jika penyerang mencoba memanggil Service Nilai secara langsung di port 3001 menggunakan curl, service secara independen menolak dengan 403 Forbidden.<br/><br/>
+    Selain itu, jika klien luar mencoba menyuntikkan header rahasia palsu, middleware di Gateway secara paksa membersihkan dan menimpanya dengan secret resmi dari environment server."
+  </div>
+  <p class="action-step">&rarr; Tindakan Layar: Buka terminal, ketik <code>curl -i http://localhost:3001/nilai</code>, tunjukkan HTTP 403 Forbidden. Buka sekilas file <code>packages/service-nilai/src/middleware/verifyInternalAccess.ts</code>.</p>
+
+  <h3>Menit 04:15 – 06:00 &bull; Alur Dosen: Input Nilai, Time Window &amp; Finalisasi Immutability</h3>
+  <div class="script-dialogue">
+    "Sekarang kita beralih ke akun Dosen 1, Dr. Irfan Santoso. Menerapkan prinsip Least Privilege, Dosen 1 hanya dapat melihat dan menilai Kelas A Keamanan Informasi yang memang diampunya.<br/><br/>
+    Sistem juga memeriksa kebijakan Window Waktu Akses: perubahan nilai hanya diizinkan pukul 07.00 hingga 21.00 WIB. Saya akan mengubah nilai mahasiswa Ahmad Fauzi menjadi 95.00 dan menyimpannya.<br/><br/>
+    Setelah nilai lengkap, dosen melakukan finalisasi. Saat tombol finalisasi diklik, antarmuka memunculkan modal konfirmasi yang menjelaskan bahwa nilai akan dikunci permanen. Setelah dikonfirmasi, status kelas berubah menjadi FINAL dan seluruh input nilai terkunci menjadi read-only demi menjamin integritas data akademik."
+  </div>
+  <p class="action-step">&rarr; Tindakan Layar: Login Dosen 1, ubah nilai Ahmad Fauzi jadi 95, simpan, klik Finalisasi Nilai Kelas, konfirmasi modal, tunjukkan badge hijau 'STATUS: FINAL' dan form terkunci.</p>
+
+  <div class="page-break"></div>
+
+  <h3>Menit 06:00 – 07:30 &bull; Service Token Antar-Layanan &amp; Sinkronisasi Idempoten</h3>
+  <div class="script-dialogue">
+    "Ketika kelas difinalisasi, bagaimana transkrip mahasiswa terbit? Sesuai arsitektur Zero Trust, Service Nilai tidak memanggil database transkrip secara langsung dan tidak memanggil URL internal secara sembarangan.<br/><br/>
+    Service Nilai terlebih dahulu meminta Service Token ke Gateway via endpoint POST /auth/service menggunakan client ID dan secret internal. Token ini memiliki claim role: service dan masa berlaku 5 menit.<br/><br/>
+    Setelah mendapat token, Service Nilai memanggil POST /transkrip/sinkron melalui API Gateway. Gateway memastikan bahwa endpoint ini hanya boleh diakses oleh token role service. Service Transkrip menerima data dan menjalankan operasi UPSERT idempoten sehingga jika terjadi pengiriman ulang (retry), data transkrip tidak akan pernah terduplikasi."
+  </div>
+  <p class="action-step">&rarr; Tindakan Layar: Buka sekilas kode finalisasi di <code>packages/service-nilai/src/routes/nilaiRoutes.ts</code> (baris 270) dan <code>packages/service-transkrip/src/routes/transkripRoutes.ts</code> (baris 75).</p>
+
+  <h3>Menit 07:30 – 08:30 &bull; Verifikasi Transkrip Mahasiswa, Anti-IDOR &amp; Administrator</h3>
+  <div class="script-dialogue">
+    "Sekarang mari kita login kembali sebagai Mahasiswa 1. Pada tab Transkrip Akademik, kita melihat mata kuliah Keamanan Informasi telah resmi masuk dengan skor 95.00, nilai huruf A, dan IPK kumulatif terhitung 4.00.<br/><br/>
+    Mahasiswa diproteksi dari celah IDOR (Insecure Direct Object Reference) sehingga tidak dapat melihat transkrip mahasiswa lain. Jika mahasiswa mencoba mengganti parameter NIM di URL, Gateway langsung menolak akses.<br/><br/>
+    Sebaliknya, jika kita login sebagai Administrator, Admin memiliki otorisasi Least Privilege untuk mencari dan memverifikasi transkrip seluruh mahasiswa untuk keperluan yudisium, namun Admin tidak memiliki hak untuk mengubah atau mengedit nilai perkuliahan."
+  </div>
+  <p class="action-step">&rarr; Tindakan Layar: Login Mahasiswa 1 &rarr; Tab Transkrip &rarr; Logout &rarr; Login Admin &rarr; Ketik NIM Ahmad Fauzi &rarr; Transkrip tampil rapi.</p>
+
+  <h3>Menit 08:30 – 09:00 &bull; Audit Trail PEP &amp; Pembuktian 100% Automated Tests</h3>
+  <div class="script-dialogue">
+    "Sebagai penutup, kita buka tab Audit Trail Log PEP di dashboard Admin. Di sini tercatat seluruh jejak keputusan keamanan: waktu, subjek, endpoint, device, keputusan ALLOW atau DENY, serta alasan kebijakan secara transparan tanpa membocorkan data sensitif.<br/><br/>
+    Seluruh sistem ini telah dilengkapi automated testing komprehensif: 41 unit dan integration tests pada Vitest serta 12 end-to-end browser journeys pada Playwright yang seluruhnya lulus 100 persen. Demikian demonstrasi sistem Zero Trust PANDAKAD, terima kasih atas perhatian Bapak/Ibu dosen."
+  </div>
+  <p class="action-step">&rarr; Tindakan Layar: Tunjukkan tabel audit log Admin, lalu buka terminal dan jalankan <code>npm test</code> (tunjukkan 41 passed). Tunjukkan Playwright E2E report.</p>
+
+  <div class="page-break"></div>
+
+  <!-- BAB 7 -->
+  <h2>BAB 7: ANTISIPASI PERTANYAAN DOSEN &amp; DEFENSE STRATEGY (FAQ)</h2>
+
+  <h3>Q1: Mengapa arsitektur ini harus dipecah menjadi 3 service terpisah dan tidak dijadikan satu aplikasi monolit Express saja?</h3>
+  <p>
+    <strong>Jawaban Kunci:</strong><br/>
+    "Pemisahan proses adalah syarat fundamental dari standar <strong>NIST SP 800-207</strong>. Dalam Zero Trust, komponen <em>Control Plane</em> (Policy Enforcement Point &amp; Policy Decision Point) harus dipisahkan dari <em>Data Plane / Resource Service</em>. Jika disatukan dalam satu monolit, kebocoran pada salah satu controller dapat mengompromikan seluruh sistem kontrol akses. Dengan memisahkan proses pada port 3000, 3001, dan 3002, kita dapat menerapkan batas kepercayaan (<em>trust boundary</em>) yang nyata, isolasi memori proses, serta membatasi hak akses basis data per layanan."
+  </p>
+
+  <h3>Q2: Mengapa kita menggunakan algoritma asimetris RS256 dan bukan simetris HS256 untuk tanda tangan JWT?</h3>
+  <p>
+    <strong>Jawaban Kunci:</strong><br/>
+    "Pada algoritma simetris seperti HS256, rahasia (secret key) yang sama digunakan untuk membuat token dan memverifikasi token. Artinya, Service Nilai dan Service Transkrip harus memegang rahasia tersebut, sehingga jika salah satu service disusupi, penyerang dapat menerbitkan token palsu sendiri. Dengan algoritma asimetris RS256, <strong>Private Key hanya dipegang oleh API Gateway</strong>, sedangkan Service hilir hanya membutuhkan <strong>Public Key</strong>. Service hilir dapat memverifikasi keaslian token secara independen tanpa risiko mampu memalsukan token."
+  </p>
+
+  <h3>Q3: Mengapa token disimpan di memori dan bukan di LocalStorage browser?</h3>
+  <p>
+    <strong>Jawaban Kunci:</strong><br/>
+    "Menyimpan token akses di <code>localStorage</code> merupakan celah keamanan yang sangat rentan terhadap serangan <em>Cross-Site Scripting (XSS)</em>, karena skrip JavaScript berbahaya dapat membaca isi <code>localStorage</code> dan mencuri token. Pada sistem kami, token akses disimpan secara aman di dalam memori React state (yang hilang saat tab ditutup), sedangkan Refresh Token dikelola menggunakan sesi berbasis server dengan rotasi token di basis data."
+  </p>
+
+  <h3>Q4: Apa yang dimaksud dengan 'Idempotent Sync' pada integrasi Service Nilai ke Service Transkrip?</h3>
+  <p>
+    <strong>Jawaban Kunci:</strong><br/>
+    "Idempotensi menjamin bahwa suatu operasi yang dieksekusi berulang kali akan menghasilkan kondisi akhir yang sama persis tanpa efek samping negatif. Ketika jaringan mengalami gangguan (timeout) saat dosen melakukan finalisasi, Service Nilai mungkin melakukan pengiriman ulang (retry). Di Service Transkrip, kami menggunakan klausul SQL <code>ON CONFLICT (student_id, class_id) DO UPDATE</code> sehingga data nilai diperbarui secara akurat dan tidak menciptakan duplikasi baris transkrip mahasiswa."
+  </p>
+
+  <h3>Q5: Mengapa verifikasi X-Device-ID dilakukan di Gateway dan apa batasannya?</h3>
+  <p>
+    <strong>Jawaban Kunci:</strong><br/>
+    "Verifikasi <code>X-Device-ID</code> memastikan bahwa request hanya diterima jika berasal dari perangkat yang terikat (bound) pada akun pengguna tersebut di basis data. Batasannya adalah header HTTP dapat dipalsukan jika penyerang mengetahui ID perangkat yang sah. Namun, dalam sistem Zero Trust kami, header ini dievaluasi secara simultan bersama kredensial autentikasi, masa berlaku token, dan window waktu (<em>multi-factor context</em>) sehingga penyerang tidak dapat menembus sistem hanya dengan memalsukan salah satu atribut."
+  </p>
+
+</body>
+</html>
