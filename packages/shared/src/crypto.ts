@@ -56,15 +56,17 @@ export function signServiceToken(claims: Omit<ServiceTokenClaims, 'jti' | 'token
 
 export function verifyToken(token: string, expectedAudience?: string | string[]): TokenClaims {
   const publicKey = config.keys.getPublicKey();
-  const audiences = expectedAudience
-    ? (Array.isArray(expectedAudience) ? expectedAudience : [expectedAudience])
+  const audiences: [string | RegExp, ...(string | RegExp)[]] | string | RegExp = expectedAudience
+    ? (Array.isArray(expectedAudience)
+        ? (expectedAudience as [string, ...string[]])
+        : expectedAudience)
     : [config.security.jwtAudience, 'transcript-service'];
 
   const decoded = jwt.verify(token, publicKey, {
     algorithms: ['RS256'],
     issuer: config.security.jwtIssuer,
     audience: audiences,
-  }) as TokenClaims;
+  }) as unknown as TokenClaims;
 
   return decoded;
 }
